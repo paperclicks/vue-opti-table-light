@@ -205,29 +205,23 @@ export default {
   
   checkIfItemHasDiff(item, key) {
     const diff = item[`${key}_diff_percentage`];
-    if (typeof diff === 'number') {
+    if (diff) {
       return true;
     }
     return false;
   },
 
   getDiffValueAndActualValue(item, key) {
-    const value = this.toFixed(item[key]);
-    const diffInPercentage = this.toFixed(item[`${key}_diff_percentage`]);
-    const absoluteDiff = this.toFixed(item[`${key}_diff_absolute`]);
-    const color = absoluteDiff >= 0 ? 'green' : 'red';
+    const value = item[key];
+    const diffInPercentage = item[`${key}_diff_percentage`];
+    const absoluteDiff = item[`${key}_diff_absolute`];
+    const color = absoluteDiff > 0 ? 'green' : 'red';
     if (absoluteDiff) {
       return `<span class="d-flex flex-column">
-        <a font-size: 12px">${value}</a>
+        <a>${value}</a>
         <a style="color: ${color}; font-size: 12px">${absoluteDiff} (${diffInPercentage}%)</a>
       </span>`
     }
     return value;
-  },
-
-  toFixed(num, fixed) {
-    if (!num) num = 0;
-    const re = new RegExp(`^-?\\d+(?:.\\d{0,${fixed || -1}})?`);
-    return parseFloat((num || 0).toString().match(re)[0]);
-  },
+  }
 };
