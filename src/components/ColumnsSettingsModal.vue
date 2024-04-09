@@ -371,8 +371,7 @@ export default {
       this.hide();
     },
     $_disableBasedOnFormat(col) {
-      // return col.item?.type !== 'entity';
-      return col.options?.format === 'string';
+      return col.item?.type !== 'metric';
     },
     $_isColTemporary(col) {
       return col.item?.temporary;
