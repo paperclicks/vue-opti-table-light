@@ -205,12 +205,24 @@
                 v-if="col.display"
                 :style="col.item.style || ''"
                 @click="col.item.onClick && col.item.onClick(item, i)">
-              <!-- CHECK IF FIELD IS A SLOT -->
-              <div v-if="col.item.slot" :class="[col.item.class, 'field']">
-                <slot :name="col.item.slot" :item="item.$ref" :field="col" :i="i"></slot>
+              <div v-if="!checkIfItemIsObject(item[col.item.key])">
+                <!-- CHECK IF FIELD IS A SLOT -->
+                <div v-if="col.item.slot" :class="[col.item.class, 'field']">
+                  <slot :name="col.item.slot" :item="item.$ref" :field="col" :i="i"></slot>
+                </div>
+                <!-- OTHERWISE RENDER FIELD  -->
+                <div v-else :class="[col.item.class, 'field']" v-html="col.item.content ? col.item.content(item) : item[col.item.key]">
+                </div>
               </div>
-              <!-- OTHERWISE RENDER FIELD  -->
-              <div v-else :class="[col.item.class, 'field']" v-html="col.item.content ? col.item.content(item) : item[col.item.key]">
+              <!-- If item is object and not a single value (Comparable data case) -->
+              <div v-else>
+                <span class="d-flex flex-column" :style="`color: ${item[col.item.key].color}`">
+                  <a style="font-size: 12px; line-height: 12px;">{{ item[col.item.key].val }}</a>
+                  <span style="font-size: 10px; line-height: 12px;">
+                    <a style="cursor: pointer; margin-right: 3px;"  v-b-tooltip.hover :title="item[col.item.key].absoluteValueTooltip">{{ item[col.item.key].absoluteVal }}</a>
+                    <a style="cursor: pointer;" v-b-tooltip.hover :title="item[col.item.key].percentageValueTooltip">({{ item[col.item.key].percentageVal }})</a>
+                  </span>
+                </span>
               </div>
             </td>
           </template>

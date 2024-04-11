@@ -203,4 +203,8 @@ export default {
     await this.deletePreset(presetName);
     this.$_close('deletePopover', index);
   },
+
+  checkIfItemIsObject(item) {
+    return typeof item === 'object';
+  },
 };

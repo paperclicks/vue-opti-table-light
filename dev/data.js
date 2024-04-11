@@ -334,7 +334,7 @@ export default function () {
         },
         {
           item: {
-            key: "ts_clicks_comparable",
+            key: "ts_clicks_comparison",
             sortable: true,
             filter: true,
             enabledComparison: false,
