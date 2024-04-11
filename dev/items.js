@@ -83,7 +83,7 @@ const defaultItems = [
     tr_epc: 0,
     epc: 0,
     ts_clicks: 10,
-    ts_clicks_comparable: 20,
+    ts_clicks_comparison: { "val": "$0", "absoluteVal": "$0", "percentageVal": "0%", "color": "red", "showDiff": true, absoluteValueTooltip: 'Absolute difference compared to previous period.', percentageValueTooltip: 'Percentage difference compared to previous period.' },
     ts_clicks_diff_percentage: -55.03,
     ts_clicks_diff_absolute: -79654,
     tr_clicks: 0,
