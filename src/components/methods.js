@@ -203,20 +203,4 @@ export default {
     await this.deletePreset(presetName);
     this.$_close('deletePopover', index);
   },
-
-  checkIfItemIsObject(item) {
-    return this.isJson(item);
-  },
-
-  isJson(str) {
-    try {
-        const parsed = JSON.parse(str);
-        if (parsed && typeof parsed === 'object') {
-            return true;
-        }
-    } catch (e) {
-        return false;
-    }
-    return false;
-  }
 };

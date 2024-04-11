@@ -205,7 +205,6 @@
                 v-if="col.display"
                 :style="col.item.style || ''"
                 @click="col.item.onClick && col.item.onClick(item, i)">
-              <div v-if="!checkIfItemIsObject(item[col.item.key])">
                 <!-- CHECK IF FIELD IS A SLOT -->
                 <div v-if="col.item.slot" :class="[col.item.class, 'field']">
                   <slot :name="col.item.slot" :item="item.$ref" :field="col" :i="i"></slot>
@@ -213,17 +212,6 @@
                 <!-- OTHERWISE RENDER FIELD  -->
                 <div v-else :class="[col.item.class, 'field']" v-html="col.item.content ? col.item.content(item) : item[col.item.key]">
                 </div>
-              </div>
-              <!-- If item is object and not a single value (Comparable data case) -->
-              <div v-else>
-                <span class="d-flex flex-column" :style="`color: ${JSON.parse(item[col.item.key]).color}`">
-                  <a style="font-size: 12px; line-height: 12px;">{{ JSON.parse(item[col.item.key]).val }}</a>
-                  <span style="font-size: 10px; line-height: 12px;">
-                    <a style="cursor: pointer; margin-right: 3px;"  v-b-tooltip.hover :title="JSON.parse(item[col.item.key]).absoluteValueTooltip">{{ JSON.parse(item[col.item.key]).absoluteVal }}</a>
-                    <a style="cursor: pointer;" v-b-tooltip.hover :title="JSON.parse(item[col.item.key]).percentageValueTooltip">({{ JSON.parse(item[col.item.key]).percentageVal }})</a>
-                  </span>
-                </span>
-              </div>
             </td>
           </template>
         </tr>
