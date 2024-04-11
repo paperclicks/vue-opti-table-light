@@ -26,6 +26,7 @@ export default function () {
           },
           header: {
             content: "Camp. ID",
+            info: "<span class=\"formula\">Click Loss=Clicks - Clicks (Tracker)</span><br>. The difference between clicks reported by your traffic source and clicks reported by your tracking platform. Some times, for various reasons, your tracking platform may report less or more clicks than what your ad network is reporting.",
             infoType: "popover",
           },
           options: {
@@ -319,6 +320,7 @@ export default function () {
             enabledComparison: false,
             group: "ts",
           },
+          comparable: true,
           header: {
             content: "Clicks",
             info: "The number of clicks as reported by the traffic source.",
