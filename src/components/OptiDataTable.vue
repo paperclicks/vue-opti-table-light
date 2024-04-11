@@ -216,11 +216,11 @@
               </div>
               <!-- If item is object and not a single value (Comparable data case) -->
               <div v-else>
-                <span class="d-flex flex-column" :style="`color: ${item[col.item.key].color}`">
-                  <a style="font-size: 12px; line-height: 12px;">{{ item[col.item.key].val }}</a>
+                <span class="d-flex flex-column" :style="`color: ${JSON.parse(item[col.item.key]).color}`">
+                  <a style="font-size: 12px; line-height: 12px;">{{ JSON.parse(item[col.item.key]).val }}</a>
                   <span style="font-size: 10px; line-height: 12px;">
-                    <a style="cursor: pointer; margin-right: 3px;"  v-b-tooltip.hover :title="item[col.item.key].absoluteValueTooltip">{{ item[col.item.key].absoluteVal }}</a>
-                    <a style="cursor: pointer;" v-b-tooltip.hover :title="item[col.item.key].percentageValueTooltip">({{ item[col.item.key].percentageVal }})</a>
+                    <a style="cursor: pointer; margin-right: 3px;"  v-b-tooltip.hover :title="JSON.parse(item[col.item.key]).absoluteValueTooltip">{{ JSON.parse(item[col.item.key]).absoluteVal }}</a>
+                    <a style="cursor: pointer;" v-b-tooltip.hover :title="JSON.parse(item[col.item.key]).percentageValueTooltip">({{ JSON.parse(item[col.item.key]).percentageVal }})</a>
                   </span>
                 </span>
               </div>

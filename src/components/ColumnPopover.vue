@@ -5,9 +5,7 @@
         <template #title>{{ typeof col.header.content === 'function' ? col.header.content() : col.header.content }}
           <button class="d-inline-block pull-right" v-if="showEditCustomMetric && (typeof col.customMetric !== 'undefined')"
             @click.prevent="editCustomMetric(col)">Edit</button></template>
-        <p v-if="!$_isJSON(col.header)">{{ col.header.info }} <span style="color: #2e4887">{{
-            col.comparable ?
-            '(The metric is selected to be a comparison column)' : '' }}</span></p>
+        <span v-if="!$_isJSON(col.header)" v-html="attachComparableInfo"></span>
         <div v-else>
          <span v-if="$_parseInfo(col.header.info).isCustomMetric">
             <b-badge variant="info" v-if="this.parsedInfo.formula">{{ this.parsedInfo.formula }}</b-badge>
@@ -36,6 +34,15 @@ export default {
         return {
             parsedInfo: {}
         }
+    },
+    computed: {
+        attachComparableInfo() {
+            if (this.col.comparable) {
+                return `${this.col.header.info}  <span style="color: #2e4887">
+            (The metric is selected to be a comparison column)</span> `;
+            }
+            return this.col.header.info;
+        },
     },
     methods: {
         $_parseInfo(info) {
