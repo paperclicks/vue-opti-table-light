@@ -83,7 +83,6 @@
             <draggable
               v-model="model"
               ghost-class="sortable-ghost"
-              @sort="test"
               :scroll-sensitivity="200"
               :force-fallback="true"
             >
