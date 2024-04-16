@@ -80,10 +80,12 @@
         </div>
         <div>
         <div :class="[hasComparisonColumns ? 'sortable-container comparison-columns' : 'sortable-container col-max']">
-            <Sortable
-              :disabled="$c_disableSort"
-              :model="$c_model"
-              ref="sortableList"
+            <draggable
+              v-model="model"
+              ghost-class="sortable-ghost"
+              @sort="test"
+              :scroll-sensitivity="200"
+              :force-fallback="true"
             >
               <div :class="[$_isColTemporary(col) ? 'hide-temp-col' : 'p-0 sortable-item']" v-for="(col, index) in $c_model" v-show="col.display" :key="`item-${index}`">
                   <span>
@@ -99,7 +101,7 @@
                     <path fill="currentColor" fill-rule="evenodd" d="M19 10a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm22-32a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z" clip-rule="evenodd"/>
                   </svg>
               </div>
-          </Sortable>
+            </draggable>
         </div>
         </div>
       </div>
@@ -132,7 +134,7 @@
 <script>
 import CustomMetricModal from './CustomMetricModal.vue';
 import _ from 'lodash';
-import Sortable from './Sortable.vue';
+import draggable from 'vuedraggable';
 import ColumnVisibility from './ColumnVisibility.vue';
 import { VueOptiSelectLight } from 'vue-opti-select-light';
 
@@ -140,7 +142,7 @@ export default {
   name: 'ColumnSettingsModal',
   components: { 
     CustomMetricModal,
-    Sortable,
+    draggable,
     ColumnVisibility,
     VueOptiSelectLight,
   },
@@ -590,6 +592,10 @@ export default {
               padding: .7rem;
               background-color: #f5f7f8;
               overflow-y: auto;
+
+              .sortable-ghost {
+                border: 3px dotted #2987e6;
+              }
 
               .sortable-item {
                 background-color: white;
