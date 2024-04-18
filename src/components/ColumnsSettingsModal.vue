@@ -85,6 +85,7 @@
               ghost-class="sortable-ghost"
               :scroll-sensitivity="200"
               :force-fallback="true"
+              :disabled="$c_disableDraggable"
             >
               <div :class="[$_isColTemporary(col) ? 'hide-temp-col' : 'p-0 sortable-item']" v-for="(col, index) in $c_model" v-show="col.display" :key="`item-${index}`">
                   <span>
@@ -252,7 +253,10 @@ export default {
       return this.model;
     },
     $c_hasGroups() {
-        return this.searchModel.length === 0 && this.hasGroups;
+      return this.searchModel.length === 0 && this.hasGroups;
+    },
+    $c_disableDraggable() {
+      return this.selectedColumnType === 'compare';
     },
   },
   created() {
