@@ -118,7 +118,7 @@
                       class="arrow-down"></div>
                 </div>
                 <div :id="`info-popover-${i}`" @click="col.header.preventSort ? null : $_fieldClickAction(col)" class="title"
-                    :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }">
+                    :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }" style="text-align: center;">
                   <!-- CHECK IF IS A SLOT -->
                   <i v-if="col.header.info && showTooltipBeforeText && !$c_headerPopover"
                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
@@ -135,9 +135,11 @@
                 <!--DROPDOWN FILTERS-->
               </div>
               <div @click="$_checkColumnWidth(`column-${i}`)" @mousedown="$_handleMouseDown($event, col, `col-${i}`)" class="column-resize"></div>
-              <b-popover v-if="$c_headerPopover" :target="`info-popover-${i}`" triggers="hover" placement="right">
-                <template #title>{{ col.header.content }}</template>
-                <p v-html="col.header.info"></p>
+              <b-popover v-if="$c_headerPopover && col.header.info" :target="`info-popover-${i}`" triggers="hover" placement="left" custom-class="header-popover">
+                <div class="info-popover">
+                  <h5>{{ col.header.content }}</h5>
+                  <p v-html="col.header.info"></p>
+                </div>
               </b-popover>
             </th>
           </tr>
@@ -444,6 +446,9 @@ export default {
         // console.log('Apply Filter on change items')
         this.dataModel.applyFilter({ key: this.sortField, order: this.sortOrder }, { value: this.models.search, fields: this.$c_searchableFields }, this.$c_headerFields);
       });
+      this.$watch('localHeaderFields', () => {
+        this.$_checkAllColumnsHeight();
+      })
     }
   },
   mounted() {
@@ -684,7 +689,6 @@ export default {
             }
             span {
               white-space: normal;
-              font-size: .8rem;
               margin-left: .2rem;
 
               &.ellipsis {
@@ -692,7 +696,7 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: normal;
-                height: 17px;
+                height: 21px;
               }
             }
           }
@@ -1039,5 +1043,19 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
+}
+.header-popover {
+  border: 1px solid rgb(223, 220, 220);
+  top: 10px !important;
+  left: -10px !important;
+  .info-popover {
+    h5 {
+      font-size: 1rem !important;
+      font-weight: 800;
+    }
+    p {
+      font-size: .8rem !important;
+    }
+  }
 }
 </style>
