@@ -95,7 +95,9 @@
                       </svg>
                     </button>
                     <input :checked="col.comparable" :disabled="$_disableBasedOnFormat(col)" @change="(e) => $_makeComparable(e, col)" type="checkbox" class="mr-1" v-if="selectedColumnType === 'compare'" />
-                    {{ typeof col.header.content == 'function' ? col.header.content() : col.header.content }}
+                    <span>
+                      {{ $_shortenContent(col.header.content) }}
+                    </span>
                   </span>
                   <svg style="cursor: grab" v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 48 48">
                     <path fill="currentColor" fill-rule="evenodd" d="M19 10a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm22-32a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z" clip-rule="evenodd"/>
@@ -380,6 +382,13 @@ export default {
     },
     $_isColTemporary(col) {
       return col.item?.temporary;
+    },
+    $_shortenContent(content) {
+      const headerContent = typeof content == 'function' ? content() : content;
+      if (headerContent.length > 20) {
+        return `${headerContent.substring(0, 20)}...`;
+      }
+      return headerContent;
     }
   },
 };

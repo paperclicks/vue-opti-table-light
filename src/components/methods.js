@@ -219,7 +219,7 @@ export default {
   $_checkColumnWidth(id) {
     const el = document.getElementById(id);
     const elWidth = el.getBoundingClientRect().width;
-    if (elWidth < 100) {
+    if (elWidth < 180) {
       document.getElementById(id).classList.add('ellipsis');
     } else {
       document.getElementById(id).classList.remove('ellipsis');
