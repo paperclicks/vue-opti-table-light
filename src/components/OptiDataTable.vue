@@ -110,31 +110,35 @@
             </th>
             <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
               <div class="header">
-                <div v-if="col.item.sortable" class="sort p-2" @click="$_fieldClickAction(col)">
+                <div v-if="col.item.sortable" class="sort" @click="$_fieldClickAction(col)">
                   <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}"
                       class="arrow-up"></div>
                   <div style="height: 5px;"></div>
                   <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
                       class="arrow-down"></div>
                 </div>
-                <div @click="col.header.preventSort ? null : $_fieldClickAction(col)" class="title pt-2 pb-2"
-                    :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }" style="text-align: center;">
+                <div :id="`info-popover-${i}`" @click="col.header.preventSort ? null : $_fieldClickAction(col)" class="title"
+                    :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }">
                   <!-- CHECK IF IS A SLOT -->
-                  <i v-if="col.header.info && showTooltipBeforeText"
+                  <i v-if="col.header.info && showTooltipBeforeText && !$c_headerPopover"
                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
                   class="fa fa-info-circle info-icon"></i>
                   <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
                     <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
                   </div>
-                  <span v-else-if="typeof col.header.content == 'function'" v-html="col.header.content()"></span>
-                  <span v-else-if="(typeof col.header.content != 'function')" v-html="col.header.content"></span>
-                  <i v-if="col.header.info && !showTooltipBeforeText"
+                  <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'" v-html="col.header.content()"></span>
+                  <span :id="`column-${i}`" class="column" v-else-if="(typeof col.header.content != 'function')" v-html="col.header.content"></span>
+                  <i v-if="col.header.info && !showTooltipBeforeText && !$c_headerPopover"
                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window', customClass: col.header.customClass }"
                   class="fa fa-info-circle info-icon"></i>
                 </div>
                 <!--DROPDOWN FILTERS-->
               </div>
-              <div @mousedown="$_handleMouseDown($event, col)" class="column-resize"></div>
+              <div @click="$_checkColumnWidth(`column-${i}`)" @mousedown="$_handleMouseDown($event, col, `col-${i}`)" class="column-resize"></div>
+              <b-popover v-if="$c_headerPopover" :target="`info-popover-${i}`" triggers="hover" placement="right">
+                <template #title>{{ col.header.content }}</template>
+                <p v-html="col.header.info"></p>
+              </b-popover>
             </th>
           </tr>
           <tr v-if="columnFilterEnable" class="column-filter">
@@ -161,7 +165,7 @@
               <input type="checkbox" :true-value="true" :false-value="false" :value="models.selectAllCheckbox" v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
             </th>
             <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
-                <div class="header">
+                <div class="header" :id="`info-popover-${i}`">
                   <div v-if="col.item.sortable" class="sort p-2" @click="$_fieldClickAction(col)">
                     <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}"
                         class="arrow-up"></div>
@@ -175,12 +179,16 @@
                     <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
                       <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
                     </div>
-                    <span v-else-if="typeof col.header.content == 'function'" v-html="col.header.content()"></span>
-                    <span v-else-if="typeof col.header.content != 'function'" v-html="col.header.content"></span>
-                    <i v-if="col.header.info"
+                    <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'" v-html="col.header.content()"></span>
+                    <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content != 'function'" v-html="col.header.content"></span>
+                    <i v-if="col.header.info && !$c_headerPopover"
                       v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
                       class="fa fa-info-circle info-icon"></i>
-                  </div>
+                    </div>
+                    <b-popover v-if="$c_headerPopover" :target="`info-popover-${i}`" triggers="hover" placement="right">
+                      <template #title>{{ col.header.content }}</template>
+                      <p v-html="col.header.info"></p>
+                    </b-popover>
                   <!--DROPDOWN FILTERS-->
                 </div>
             </th>
@@ -439,6 +447,7 @@ export default {
     }
   },
   mounted() {
+    this.$_checkAllColumnsHeight();
     /* ------------ Fake scroller Bind events -------------*/
     const tableTop = this.$refs.stickyHeader;
     // const tableTopChild = tableTop.childNodes[0];
@@ -666,6 +675,26 @@ export default {
           }
           .cog {
             text-align: right;
+          }
+          .title {
+            &:hover {
+              span {
+                color: #2987e6;
+              }
+            }
+            span {
+              white-space: normal;
+              font-size: .8rem;
+              margin-left: .2rem;
+
+              &.ellipsis {
+                float: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                height: 17px;
+              }
+            }
           }
           .arrow-up {
             width: 0;
