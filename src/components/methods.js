@@ -203,4 +203,26 @@ export default {
     await this.deletePreset(presetName);
     this.$_close('deletePopover', index);
   },
+
+  $_checkAllColumnsHeight() {
+    const allCols = document.querySelectorAll('.column');
+    for (const col of allCols) {
+      const colWidth = col.getBoundingClientRect().height;
+      if (colWidth > 100) {
+        col.classList.add('ellipsis');
+      } else {
+        col.classList.remove('ellipsis');
+      }
+    }
+  },
+
+  $_checkColumnWidth(id) {
+    const el = document.getElementById(id);
+    const elWidth = el.getBoundingClientRect().width;
+    if (elWidth < 100) {
+      document.getElementById(id).classList.add('ellipsis');
+    } else {
+      document.getElementById(id).classList.remove('ellipsis');
+    }
+  },
 };

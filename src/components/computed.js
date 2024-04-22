@@ -79,5 +79,8 @@ export default {
   },
   $c_disableEditButton() {
     return !this.presetName.length;
-  }
+  },
+  $c_headerPopover() {
+    return this.showHeaderPopover;
+  },
 };
