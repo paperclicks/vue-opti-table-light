@@ -7,7 +7,7 @@
       <span v-if="!hasPresets">
         <h4>Column Settings</h4>
       </span>
-      <span class="d-flex align-items-center ml-1" v-if="!editMode && hasPresets">
+      <span class="d-flex align-items-end ml-1" v-if="!editMode && hasPresets">
         <h4>{{ currentPreset.name }}</h4>
         <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18" class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_13502_19190)">
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div v-if="$c_noResult" class="no-result-container">
-          <svg width="120" height="90" viewBox="0 0 107 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="220" height="170" viewBox="0 0 107 79" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect y="23" width="86" height="56" rx="10" fill="url(#paint0_linear_13595_28144)" fill-opacity="0.08" />
             <rect x="0.5" y="23.5" width="85" height="55" rx="9.5" stroke="url(#paint1_linear_13595_28144)"
               stroke-opacity="0.15" stroke-linejoin="bevel" />
@@ -224,7 +224,7 @@
           <h4>No metrics found for "{{ searchModel }}"</h4>
           <p>You can check the spelling, or try a different search term.</p>
           <div>
-            <button @click="$_clearSearch" class="btn btn-secondary">Clear Seach</button>
+            <button @click="$_clearSearch" class="btn btn-secondary clear-btn">Clear Seach</button>
           </div>
         </div>
         <b-list-group :class="[!hasGroups ? 'no-groups' : '']" v-else id="nav-scroller" ref="content">
@@ -634,7 +634,8 @@ export default {
       background-color: #f5f6f7;
       align-items: baseline;
       h4 {
-        font-size: 16px;
+        margin-top: .4rem;
+        font-size: 17px;
       }
       .preset-edit-name {
         display: flex;
@@ -684,7 +685,7 @@ export default {
               h6 {
                 margin: 1.2rem .5rem 0rem .5rem;
                 font-weight: 700;
-                font-size: 1.1rem;
+                font-size: 18px;
               }
               padding: 0rem !important;
               overflow: none;
@@ -708,7 +709,7 @@ export default {
                   a {
                     color: black;
                     font-weight: 400;
-                    font-size: 1rem;
+                    font-size: 15px;
                     border: 1px solid #E8E8E9;
                     margin: 0 .4rem;
                     padding: .5rem;
@@ -724,7 +725,7 @@ export default {
                 align-items: center;
                 justify-content: space-between;
                 h6 {
-                  font-size: 1.1rem;
+                  font-size: 18px;
                 }
 
                 button {
@@ -754,9 +755,14 @@ export default {
                 margin-bottom: .4rem;
                 .custom-control-label {
                   color: #262626;
-                  font-size: 1.1rem;
+                  font-size: 18px;
                   padding-top: .15rem;
                   font-weight: 600;
+
+                  &::after {
+                    width: 18px;
+                    height: 18px;
+                  }
                 }
                 .custom-control-input:checked ~ .custom-control-label::before,
                 .custom-control-input:indeterminate ~ .custom-control-label::before {
@@ -774,6 +780,10 @@ export default {
               p {
                 font-size: .8rem;
                 color: #929294;
+              }
+              .clear-btn {
+                background-color: white;
+                color: black;
               }
             }
           }
@@ -799,7 +809,7 @@ export default {
                   width: 100%;
                   border-radius: 6px;
                   padding: .2rem .5rem;
-                  font-size: .9rem;
+                  font-size: 14px;
                   font-weight: 400;
                   color: #929294;
               
@@ -832,7 +842,7 @@ export default {
             .order-columns-header {
               padding: 1.3rem .4rem 0rem .4rem;
               h6 {
-                font-size: 1.1rem;
+                font-size: 18px;
               }
               p {
                 font-size: 12px;
@@ -842,8 +852,8 @@ export default {
             }
 
             .sortable-container {
-              max-height: 540px;
-              height: 540px;
+              max-height: 560px !important;
+              height: 560px !important;
               padding: .7rem;
               overflow-y: auto;
 
@@ -915,6 +925,13 @@ export default {
               cursor: pointer;
               align-items: center;
               gap: .2rem;
+
+              .custom-control-label {
+                &::after {
+                  width: 15px;
+                  height: 15px;
+                }
+              }
 
               .custom-control-input:checked ~ .custom-control-label::before {
                 background-color: #4158D0;

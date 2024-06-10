@@ -10,7 +10,7 @@
       {{ col.label }}
       </b-form-checkbox>
     </div>
-    <label v-for="(item, i) in col.items" :id="`tooltip-${item.item.key}`" role="colitem" :class="[isColTemporary(item) ? 'hide-temp-col' : 'w-100 m-0 py-1 px-2 ml-2']"
+    <label v-for="(item, i) in col.items" :id="`tooltip-${item.item.key}`" role="colitem" :class="[isColTemporary(item) ? 'hide-temp-col' : 'group-col w-100 m-0 py-1 px-2 ml-2']"
       :key="i">
       <b-form-checkbox
         v-model="item.display"

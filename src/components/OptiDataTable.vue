@@ -855,6 +855,7 @@ export default {
           
           .dropdown-header {
             padding: 0rem;
+            font-size: 13px;
             text-transform: uppercase;
             color: #ABABAB;
             margin-bottom: .4rem;
