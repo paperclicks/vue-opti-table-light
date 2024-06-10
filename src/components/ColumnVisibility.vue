@@ -1,24 +1,25 @@
 <template>
   <div v-if="hasGroups">
     <div class="group-label">
-      <button v-if="allItemsOfGroupChecked(col.group)" @click="selectAllItemsOfGroup(false, col.group)">
-        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-      </button>
-      <button v-if="!allItemsOfGroupChecked(col.group) && !partialItemsOfGroupChecked(col.group)" @click="selectAllItemsOfGroup(true, col.group)">
-        <i class="fa fa-square-o" aria-hidden="true"></i>
-      </button>
-      <button v-if="partialItemsOfGroupChecked(col.group)" @click="selectAllItemsOfGroup(true, col.group)">
-        <i class="fa fa-minus-square-o" aria-hidden="true"></i>
-      </button>
-      <p>{{ col.label }}</p>
+      <b-form-checkbox
+        size="lg"
+        :checked="allItemsOfGroupChecked(col.group)"
+        :indeterminate="partialItemsOfGroupChecked(col.group)"
+        @change="(c) => selectAllItemsOfGroup(c, col.group)"
+      >
+      {{ col.label }}
+      </b-form-checkbox>
     </div>
-    <label v-for="(item, i) in col.items" :id="`tooltip-${item.item.key}`" role="colitem" :class="[isColTemporary(item) ? 'hide-temp-col' : 'w-100 m-0 py-1 px-2']"
+    <label v-for="(item, i) in col.items" :id="`tooltip-${item.item.key}`" role="colitem" :class="[isColTemporary(item) ? 'hide-temp-col' : 'w-100 m-0 py-1 px-2 ml-2']"
       :key="i">
-      <input type="checkbox" :true-value="true" :false-value="false" v-model="item.display" />
-      {{ typeof item.header.content == 'function' ? item.header.content() : item.header.content }}
-      <i v-if="item.header.info && infoType === 'tooltip'"
+      <b-form-checkbox
+        v-model="item.display"
+      >
+        {{ typeof item.header.content == 'function' ? item.header.content() : item.header.content }}
+        <i v-if="item.header.info && infoType === 'tooltip'"
         v-b-tooltip="{ hover: true, html: true, title: item.header.info, boundary: 'window' }"
         class="fa fa-info-circle info-icon"></i>
+      </b-form-checkbox>
       <custom-metric-popover
         v-if="(typeof item.customMetric !== 'undefined')"
         :col="item"
@@ -34,13 +35,16 @@
       />
     </label>
   </div>
-  <div v-else :class="[isColTemporary(col) ? 'hide-temp-col' : 'w-100 m-0 py-1 px-2']">
+  <div v-else :class="[isColTemporary(col) ? 'hide-temp-col' : 'w-100 m-0 py-1 px-2 ml-2']">
     <label :id="`tooltip-${col.item.key}`" role="colitem" class="w-100 m-0 py-1 px-2">
-      <input type="checkbox" :true-value="true" :false-value="false" v-model="col.display" />
-      {{ typeof col.header.content == 'function' ? col.header.content() : col.header.content }}
-      <i v-if="infoType === 'tooltip'"
+      <b-form-checkbox
+        v-model="col.display"
+      >
+        {{ typeof col.header.content == 'function' ? col.header.content() : col.header.content }}
+        <i v-if="infoType === 'tooltip'"
         v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
         class="fa fa-info-circle info-icon"></i>
+      </b-form-checkbox>
       <custom-metric-popover
         v-if="(typeof col.customMetric !== 'undefined')"
         :col="col"

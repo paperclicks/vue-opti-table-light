@@ -180,28 +180,40 @@ export default {
   },
 
   // Handle Presets
-  $_changePreset({ target: { ariaLabel, checked } }) {
-    if (checked) {
-      this.localHeaderFields = this.presets.find((p) => p.uniqueName === ariaLabel)?.fields || [];
-      this.$refs.presetDropdown.hide(true);
+  async $_changePreset(preset) {
+    const presetFound = this.$c_allPresets.find((p) => p.name === preset.name);
+    if (presetFound) this.localHeaderFields = presetFound.fields;
+    this.$refs.presetDropdown.hide(true);
+  },
+
+  async $_savePreset(preset, refName) {
+    this.presetLoader = true;
+    await this.savePreset(preset)
+    this.presetLoader = false;
+    this.$_closeModal(refName);
+  },
+
+  async $_closeModal(refName) {
+    const ref = this.$refs[refName];
+    if (ref?.length) {
+      ref[0].hide(true);
+    } else {
+      ref.hide(true);
     }
   },
 
-  // close popover
-  $_close(ref, index) {
-    this.$refs[ref][index].$emit('close');
+  async $_deletePreset(preset, refName) {
+    this.presetLoader = true;
+    await this.deletePreset(preset);
+    this.presetLoader = false;
+    this.$_closeModal(refName);
   },
 
-  // Edit Preset
-  async $_editPreset(index) {
-    await this.editPreset(this.presetName);
-    this.$_close('editPopover', index);
-  },
-
-  // Delete Preset
-  async $_deletePreset(index, presetName) {
-    await this.deletePreset(presetName);
-    this.$_close('deletePopover', index);
+  async $_clonePreset(preset, refName) {
+    this.presetLoader = true;
+    await this.clonePreset(preset);
+    this.presetLoader = false;
+    this.$_closeModal(refName);
   },
 
   $_checkAllColumnsHeight() {
@@ -225,4 +237,9 @@ export default {
       document.getElementById(id).classList.remove('ellipsis');
     }
   },
+
+  $_sliceText(text, length) {
+    return text.length > length ? `${text.slice(0, length)}...` : text;
+  }
+
 };
