@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasGroups">
+  <div v-if="hasGroups" class="group-wrapper">
     <div class="group-label">
       <b-form-checkbox
         size="lg"
@@ -7,7 +7,9 @@
         :indeterminate="partialItemsOfGroupChecked(col.group)"
         @change="(c) => selectAllItemsOfGroup(c, col.group)"
       >
-      {{ col.label }}
+      <h5 class="label-name">
+        {{ col.label }}
+      </h5>
       </b-form-checkbox>
     </div>
     <label v-for="(item, i) in col.items" :id="`tooltip-${item.item.key}`" role="colitem" :class="[isColTemporary(item) ? 'hide-temp-col' : 'group-col w-100 m-0 py-1 px-2 ml-2']"
@@ -15,10 +17,12 @@
       <b-form-checkbox
         v-model="item.display"
       >
+      <p class="d-flex align-items-center">
         {{ typeof item.header.content == 'function' ? item.header.content() : item.header.content }}
         <i v-if="item.header.info && infoType === 'tooltip'"
         v-b-tooltip="{ hover: true, html: true, title: item.header.info, boundary: 'window' }"
-        class="fa fa-info-circle info-icon"></i>
+        class="fa fa-info-circle info-icon ml-1"></i>
+      </p>
       </b-form-checkbox>
       <custom-metric-popover
         v-if="(typeof item.customMetric !== 'undefined')"
@@ -40,10 +44,12 @@
       <b-form-checkbox
         v-model="col.display"
       >
+      <p class="d-flex align-items-center">
         {{ typeof col.header.content == 'function' ? col.header.content() : col.header.content }}
         <i v-if="infoType === 'tooltip'"
         v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
-        class="fa fa-info-circle info-icon"></i>
+        class="fa fa-info-circle info-icon ml-1"></i>
+      </p>
       </b-form-checkbox>
       <custom-metric-popover
         v-if="(typeof col.customMetric !== 'undefined')"

@@ -45,7 +45,7 @@
                     <ellipse cx="4.00033" cy="3.30339" rx="0.666667" ry="0.666667"
                       transform="rotate(90 4.00033 3.30339)" fill="#5F6870" />
                   </svg>
-                  <p class="ml-1">
+                  <p class="toggle-text">
                     Columns
                   </p>
                 </span>
@@ -54,15 +54,17 @@
                     stroke-linejoin="round" />
                 </svg>
               </template>
-              <b-dropdown-form>
+              <b-dropdown-form class="preset-wrapper">
                 <div v-if="$c_hasUserPresets">
                   <b-dropdown-header>
                     Your custom presets
                   </b-dropdown-header>
                   <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio v-for="(preset, i) in preset_list.user_presets" class="user-preset-label"
-                    v-model="selectedPreset" :key="preset.id" :value="preset.name" @change="() => $_changePreset(preset)">
-                    {{ preset.name }}
+                    <b-form-radio v-for="(preset, i) in preset_list.user_presets" class="user-preset-label preset-radio"
+                    v-model="selectedPreset" :key="preset.details._id" :value="preset.details.presetName" @change="() => $_changePreset(preset)">
+                    <p class="preset-name">
+                      {{ preset.details.presetName }}
+                    </p>
                       <button 
                         class="delete-preset-btn" 
                         @click.prevent 
@@ -96,10 +98,12 @@
                     Suggested presets
                   </b-dropdown-header>
                   <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio v-for="(preset, i) in preset_list.admin_presets" v-model="selectedPreset" :key="preset.id"
+                    <b-form-radio class="preset-radio" v-for="(preset, i) in preset_list.admin_presets" v-model="selectedPreset" :key="preset.id"
                       :value="preset.name" @change="() => $_changePreset(preset)">
                       <span class="d-flex align-items-center justify-content-between">
-                        {{ preset.name }}
+                        <p class="preset-name">
+                          {{ preset.name }}
+                        </p>
                         <button
                           @click.prevent
                           v-b-modal="`clone-modal-${i}`"
@@ -110,7 +114,7 @@
                           </svg>
                         </button>
                       </span>
-                      <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.description">{{ $_sliceText(preset.description, 60) }}</p>
+                      <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.description" class="preset-description">{{ $_sliceText(preset.description, 60) }}</p>
                       <b-modal hide-footer hide-header content-class="clone-preset-content" :id="`clone-modal-${i}`"
                         :ref="`clone-modal-${i}`" centered>
                         <h5>Save as Column Preset</h5>
@@ -128,7 +132,7 @@
                   </b-dropdown-group>
                 </div>
               </b-dropdown-form>
-              <b-dropdown-item-button @click="$refs.columnsSettingsModal.show()">Column
+              <b-dropdown-item-button class="column-settings-btn" @click="$refs.columnsSettingsModal.show()">Column
                 Settings</b-dropdown-item-button>
             </b-dropdown>
           </template>
@@ -841,29 +845,50 @@ export default {
         display: flex;
         align-items: center;
         gap: 1.2rem;  
+        .toggle-text {
+          margin: 0 0 0 0.3rem;
+          padding: 0;
+        }
       }
-      p {
-        padding: 0;
-        margin: 0;
-      }
+
       .dropdown-menu {
         width: 300px;
         padding: .5rem .8rem;
         transform: translate3d(-155px, 38px, 0px);
-        .b-dropdown-form {
-          padding: 0;
+ 
+        .preset-wrapper {
+          .b-dropdown-form {
+            padding: 0;
+
+            .preset-radio {
+              .custom-control-label {
+                &::after,
+                &::before {
+                  width: 20px !important;
+                  height: 20px !important;
+                }
+              }
+              .preset-name {
+                margin: 0;
+                padding: 0;
+              }
+              .preset-description {
+                margin-bottom: 0;
+              }
+            }
+            
+          }
           
           .dropdown-header {
             padding: 0rem;
             font-size: 13px;
             text-transform: uppercase;
             color: #ABABAB;
-            margin-bottom: .4rem;
+            margin-bottom: 7px;
           }
 
           .list-unstyled {
             .user-preset-label {
-
               .modal-header,
               .modal-footer {
                 display: none;
@@ -877,21 +902,21 @@ export default {
               .delete-preset-btn {
                 background-color: transparent;
                 border: none;
-                margin-right: -1.3rem;
+                margin-right: -20px;
               }
             }
             .custom-control {
               padding: 0;
-              margin-bottom: .5rem;
+              margin-bottom: 7px;
 
               .clone-preset-btn {
                 background-color: transparent;
                 border: none;
-                margin-right: -1.3rem;
+                margin-right: -20px;
               }
             }
             .custom-radio {
-              padding: .5rem 1.9rem;
+              padding: 10px 28px;
 
               &:has(input:checked) {
                 background-color: #F2F2FA;
@@ -910,28 +935,29 @@ export default {
 
               
               .custom-control-label {
-                padding-left: .3rem;
+                padding-left: 5px;
 
-                p {
-                  font-size: .8rem;
+                .preset-description {
+                  font-size: 13px;
                   color: #ABABAB;
                 }
 
                 &::after,
                 &::before {
-                  width: 1.2rem;
-                  height: 1.2rem;
+                  width: 15px;
+                  height: 15px;
                 }
               }
             }
           }
-
         }
         button[type = "button"] {
           color: #4158D0;
-          border: 1px solid #4158D0;
+          border: 1.4px solid #4158D0;
+          padding: 3px 2px;
           border-radius: 8px;
           text-align: center;
+          margin-bottom: 5px;
 
           &:hover {
             background-color: white;
@@ -1020,13 +1046,13 @@ export default {
     span {
       display: flex;
       justify-content: flex-end;
-      gap: .5rem;
+      gap: 6px;
 
       button {
         border-color: transparent;
         border-radius: 3px;
         font-weight: 500;
-        padding: .2rem .3rem;
+        padding: 4px 7px;
 
         &:first-child {
           background-color: white;
@@ -1038,7 +1064,7 @@ export default {
           color: white;
           display: flex;
           align-items: center;
-          gap: .3rem;
+          gap: 4px;
         }
       }
     }
@@ -1053,13 +1079,13 @@ export default {
   span {
     display: flex;
     justify-content: flex-end;
-    gap: .5rem;
+    gap: 6px;
 
     button {
       border-color: transparent;
       border-radius: 3px;
       font-weight: 500;
-      padding: .2rem .3rem;
+      padding: 4px 7px;
 
       &:first-child {
         background-color: white;
@@ -1071,7 +1097,7 @@ export default {
         color: white;
         display: flex;
         align-items: center;
-        gap: .3rem;
+        gap: 4px;
       }
     }
   }

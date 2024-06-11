@@ -61,8 +61,12 @@
         <b-nav v-if="hasGroups" class="groups-container" pills v-b-scrollspy:nav-scroller>
           <b-nav-item v-for="(group, index) in $c_nativeFields" @click="scrollIntoView" :href="`#${group.group}`"
             :key="index">
-            <i class="fa fa-folder-o" aria-hidden="true"></i>
-            {{ group.label }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 56 56">
+              <path fill="currentColor" d="M8.453 49.75h39.82c4.195 0 6.633-2.437 6.633-7.266v-24.68c0-4.827-2.46-7.241-7.336-7.241H24.766c-1.594 0-2.555-.399-3.727-1.383l-1.43-1.196c-1.547-1.289-2.742-1.734-5.062-1.734H7.562c-4.101 0-6.468 2.344-6.468 7.078v29.156c0 4.852 2.484 7.266 7.359 7.266M4.867 13.516c0-2.32 1.242-3.492 3.469-3.492h5.25c1.547 0 2.484.374 3.68 1.406l1.43 1.172c1.523 1.265 2.765 1.734 5.085 1.734H47.5c2.32 0 3.633 1.242 3.633 3.68v1.406H4.867Zm3.656 32.46c-2.343 0-3.656-1.242-3.656-3.68V22.962h46.266v19.36c0 2.413-1.313 3.656-3.633 3.656Z"/>
+            </svg>
+            <p>
+              {{ group.label }}
+            </p>
           </b-nav-item>
         </b-nav>
       </div>
@@ -250,20 +254,20 @@
             </button>
           </span>
           <div class="compare-info">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_13502_18627)">
+                <circle cx="8.00016" cy="7.9987" r="6.66667" stroke="#BBBBBD" />
+                <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round" />
+                <circle cx="0.666667" cy="0.666667" r="0.666667" transform="matrix(1 0 0 -1 7.3335 6)"
+                  fill="#BBBBBD" />
+              </g>
+              <defs>
+                <clipPath id="clip0_13502_18627">
+                  <rect width="16" height="16" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
             <p>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_13502_18627)">
-                  <circle cx="8.00016" cy="7.9987" r="6.66667" stroke="#BBBBBD" />
-                  <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round" />
-                  <circle cx="0.666667" cy="0.666667" r="0.666667" transform="matrix(1 0 0 -1 7.3335 6)"
-                    fill="#BBBBBD" />
-                </g>
-                <defs>
-                  <clipPath id="clip0_13502_18627">
-                    <rect width="16" height="16" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
               {{ selectedColumnType === 'compare' ? 'Select the columns that you want to be compared.' : 'Drag and drop columns in the order that you prefer.' }}
             </p>
           </div>
@@ -278,27 +282,27 @@
               :disabled="$c_disableDraggable">
               <div :class="[$_isColTemporary(col) ? 'hide-temp-col' : 'p-0 sortable-item']"
                 v-for="(col, index) in $c_model" v-show="col.display" :key="`item-${index}`">
-                <span>
-                  <button class="clean-btn" v-if="selectedColumnType === 'order'" @click="$_removeSelectedColumn(col)">
-                    <svg v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
-                      viewBox="0 0 24 24">
-                      <path fill="currentColor"
-                        d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6l-5.6 5.6Z" />
-                    </svg>
-                  </button>
-                  <input :checked="col.comparable" :disabled="$_disableBasedOnFormat(col)"
-                    @change="(e) => $_makeComparable(e, col)" type="checkbox" class="mr-1"
-                    v-if="selectedColumnType === 'compare'" />
-                  <span>
-                    {{ $_shortenContent(col.header.content, $c_splitContentLength) }}
-                  </span>
-                </span>
-                <svg style="cursor: grab" v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg"
+                <div class="d-flex align-items-center">
+                  <svg style="cursor: grab" v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg"
                   width="17" height="17" viewBox="0 0 48 48">
                   <path fill="currentColor" fill-rule="evenodd"
                     d="M19 10a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm22-32a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
                     clip-rule="evenodd" />
-                </svg>
+                  </svg>
+                  <input :checked="col.comparable" :disabled="$_disableBasedOnFormat(col)"
+                    @change="(e) => $_makeComparable(e, col)" type="checkbox" class="mr-1"
+                    v-if="selectedColumnType === 'compare'" />
+                  <p class="sortable-item-text">
+                    {{ $_shortenContent(col.header.content, $c_splitContentLength) }}
+                  </p>
+                </div>
+                <button class="clean-btn" v-if="selectedColumnType === 'order'" @click="$_removeSelectedColumn(col)">
+                  <svg v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24">
+                    <path fill="#BBBBBD"
+                      d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6l-5.6 5.6Z" />
+                  </svg>
+                </button>
               </div>
             </draggable>
           </div>
@@ -405,8 +409,7 @@ export default {
       return this.hasGroups ? 'xl' : 'lg';
     },
     $c_nativeFields() {
-      // return this.nativeFields.filter((b) => b.display);
-      return this.nativeFields;
+      return this.nativeFields.filter((b) => b.display);
     },
     $c_visibilityColumns() {
       if (this.hasGroups) {
@@ -444,13 +447,13 @@ export default {
       return this.selectedColumnType === 'compare';
     },
     $c_disableSaveButton() {
-      return this.presetEnabled && this.newPresetName.length === 0;
+      return this.presetEnabled && this.newPresetName?.length === 0;
     },
     $c_noResult() {
-      return this.$c_columns.length === 0;
+      return this.$c_columns?.length === 0;
     },
     $c_disableEditPresetButton() {
-      return !this.editedPresetName.length;
+      return !this.editedPresetName?.length;
     },
     $c_splitContentLength() {
       return this.hasGroups ? 20 : 40;
@@ -683,7 +686,7 @@ export default {
 
             &.groups {
               h6 {
-                margin: 1.2rem .5rem 0rem .5rem;
+                margin: 20px 21px 0rem 21px;
                 font-weight: 700;
                 font-size: 18px;
               }
@@ -691,7 +694,7 @@ export default {
               overflow: none;
 
               .groups-container {
-                margin-top: 1rem;
+                margin-top: 16px;
                 flex-direction: column;
                 flex-wrap: nowrap;
                 max-height: 600px;
@@ -707,19 +710,29 @@ export default {
                     }
                   }
                   a {
+                    border-radius: 7px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
                     color: black;
                     font-weight: 400;
                     font-size: 15px;
+                    margin: 0 20px;
+                    width: 85%;
                     border: 1px solid #E8E8E9;
-                    margin: 0 .4rem;
                     padding: .5rem;
+
+                    p {
+                      margin: 0;
+                      padding: 0;
+                    }
                   }
                 }
               }
             }
             .items-col-visibility-header {
-              padding: 0rem 1rem;
-              margin-top: 1.2rem;
+              padding: 0rem 16px;
+              margin-top: 19px;
               span {
                 display: flex;
                 align-items: center;
@@ -742,32 +755,36 @@ export default {
                 color: #212529;
               }
             }
-            .group-label {
-              margin-top: 1rem;
-              margin-bottom: 1rem;
-              display: flex;
-              border-bottom: 2px solid #E8E8E9;
-              align-items: center;
-              gap: .3rem;
-
-              .custom-control {
-                padding-left: 2.4rem;
-                margin-bottom: .4rem;
-                .custom-control-label {
-                  color: #262626;
-                  font-size: 18px;
-                  padding-top: .15rem;
-                  font-weight: 600;
-
-                  &::after {
-                    width: 18px;
-                    height: 18px;
+            .group-wrapper {
+              padding-bottom: 15px;
+              .group-label {
+                padding: 15px 5px;
+                margin-bottom: 15px;
+                display: flex;
+                border-bottom: 2px solid #E8E8E9;
+                align-items: center;
+                gap: 4px;
+  
+                .custom-control {
+                  padding-left: 38px;
+                  margin-bottom: 6px;
+                  .custom-control-label {
+                    color: #262626;
+                    .label-name {
+                      padding-top: 2px;
+                      font-weight: 600;
+                    }
+  
+                    &::after {
+                      width: 20px !important;
+                      height: 20px !important;
+                    }
                   }
-                }
-                .custom-control-input:checked ~ .custom-control-label::before,
-                .custom-control-input:indeterminate ~ .custom-control-label::before {
-                  background-color: #4158D0;
-                  border-color: #4158D0;
+                  .custom-control-input:checked ~ .custom-control-label::before,
+                  .custom-control-input:indeterminate ~ .custom-control-label::before {
+                    background-color: #4158D0;
+                    border-color: #4158D0;
+                  }
                 }
               }
             }
@@ -778,7 +795,7 @@ export default {
               justify-content: center;
               height: 70%;
               p {
-                font-size: .8rem;
+                font-size: 13px;
                 color: #929294;
               }
               .clear-btn {
@@ -790,15 +807,15 @@ export default {
           &.items-col-order {
             padding: 0;
             .order-col-info {
-              padding: 1rem .4rem 0rem .4rem;
+              padding: 16px 6px 0rem 6px;
 
               .items-col-order-tabs {
                 background-color: #f0f0f0;
-                padding: 0.2rem;
+                padding: 5px;
                 border-radius: 6px;
                 display: flex;
                 justify-content: space-evenly;
-                margin-bottom: 1rem;
+                margin-bottom: 16px;
                 white-space: nowrap;
               
                 button {
@@ -808,9 +825,9 @@ export default {
                   cursor: pointer;
                   width: 100%;
                   border-radius: 6px;
-                  padding: .2rem .5rem;
+                  padding: 3px 4px;
                   font-size: 14px;
-                  font-weight: 400;
+                  font-weight: 500;
                   color: #929294;
               
                   &[aria-selected='true'] {
@@ -823,7 +840,7 @@ export default {
             .items-col-order-header {
               display: flex;
               align-items: flex-start;
-              gap: .5rem;
+              gap: 8px;
               white-space: nowrap;
               font-size: 12px;
               
@@ -833,6 +850,9 @@ export default {
               }
             }
             .compare-info {
+              display: flex;
+              align-items: flex-start;
+              gap: 5px;
               p {
                 font-size: 12px;
                 color: #929294;
@@ -840,7 +860,7 @@ export default {
               }
             }
             .order-columns-header {
-              padding: 1.3rem .4rem 0rem .4rem;
+              padding: 20px 6px 0rem 6px;
               h6 {
                 font-size: 18px;
               }
@@ -852,9 +872,9 @@ export default {
             }
 
             .sortable-container {
-              max-height: 560px !important;
-              height: 560px !important;
-              padding: .7rem;
+              max-height: 540px !important;
+              height: 540px !important;
+              padding: 11px;
               overflow-y: auto;
 
               .sortable-ghost {
@@ -863,15 +883,19 @@ export default {
 
               .sortable-item {
                 background-color: white;
-                margin: 5px 0;
+                margin: 7px 0;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: .3rem .5rem !important;
+                padding: 5px 8px !important;
                 border-radius: 5px;
                 border: 1px solid #E8E8E9;
-                white-space: break-spaces;
-                font-size: 14px;
+                .sortable-item-text {
+                  white-space: break-spaces;
+                  font-size: 14px;
+                  padding: 0;
+                  margin: 0;
+                }
               }
               span {
                 display: flex;
@@ -884,7 +908,7 @@ export default {
               max-height: 530px;
               height: 530px;
               h6 {
-                font-size: 1.1rem;
+                font-size: 17px;
               }
             }
             .flip-list-move {
@@ -899,32 +923,33 @@ export default {
             }
           }
           .list-group {
-            max-height: 530px;
+            max-height: 550px;
             min-height: 500px;
             overflow-y: auto;
             position: relative;
-            margin: 1rem 0rem;
-            gap: .8rem;
+            margin: 16px 0;
+            gap: 13px;
             .space {
               height: 5px;
               width: 5px;
             }
           }
           .no-groups {
-            gap: 0rem !important;
+            gap: 0px !important;
           }
           .list-group-item {
             border: none;
             background-color: #FAFAFA;
-            margin: 0rem 1rem;
-            border-radius: .35rem;
+            margin: 0px 16px;
+            border-radius: 5px;
 
             label {
               display: flex;
               justify-content: space-between;
               cursor: pointer;
+              margin-bottom: -12px;
               align-items: center;
-              gap: .2rem;
+              gap: 3px;
 
               .custom-control-label {
                 &::after {
@@ -940,7 +965,7 @@ export default {
             }
 
             .custom-metrics-actions {
-              margin-right: 1.5rem;
+              margin-right: 24px;
             }
           }
         }
