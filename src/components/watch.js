@@ -14,13 +14,7 @@ export default {
     immediate: true,
     handler() {
       this.localTableModel = this.tableModel;
-      // check if preset exists else assign localheaderfields to headerfields
-      const foundPreset = this.$c_allPresets.find(preset => preset.name === this.currentPreset?.name);
-      if (foundPreset) {
-        this.localHeaderFields = foundPreset.fields;  
-      } else {
-        this.localHeaderFields = this.headerFields.map(item => Object.assign({}, item));
-      }
+      this.localHeaderFields = this.headerFields.map(item => Object.assign({}, item));
       this.localTableModel.displayColumns = []
       // this.localTableModel.displayColumns = this.localHeaderFields.filter(field => field.display !== false);
       // Reset Filter on headers change

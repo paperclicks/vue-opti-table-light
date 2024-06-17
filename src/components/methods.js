@@ -181,8 +181,7 @@ export default {
 
   // Handle Presets
   async $_changePreset(preset) {
-    const presetFound = this.$c_allPresets.find((p) => p.name === preset.name);
-    if (presetFound) this.localHeaderFields = presetFound.fields;
+    this.changePreset(preset);
     this.$refs.presetDropdown.hide(true);
   },
 

@@ -32,6 +32,5 @@ export default function () {
     resizeStartOffset: 0,
     newPresetName: "",
     presetLoader: false,
-    selectedPreset: this.currentPreset?.name || ''
   };
 }

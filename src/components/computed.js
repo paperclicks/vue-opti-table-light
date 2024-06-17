@@ -87,15 +87,15 @@ export default {
     return !this.newPresetName.length;
   },
   $c_allPresets() {
-    if (this.preset_list) {
-      return [...this.preset_list?.user_presets, ...this.preset_list?.admin_presets];
+    if (this.presetList) {
+      return [...this.presetList?.user_presets, ...this.presetList?.admin_presets];
     }
     return [];
   },
   $c_hasUserPresets() {
-    return this.preset_list?.user_presets.length > 0;
+    return this.presetList?.user_presets.length > 0;
   },
   $c_hasAdminPresets() {
-    return this.preset_list?.admin_presets.length > 0;
+    return this.presetList?.admin_presets.length > 0;
   },
 };

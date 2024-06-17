@@ -8,7 +8,7 @@
         <h4>Column Settings</h4>
       </span>
       <span class="d-flex align-items-end ml-1" v-if="!editMode && hasPresets">
-        <h4>{{ currentPreset.name }}</h4>
+        <h4>{{ selectedPreset.details.presetName }}</h4>
         <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18" class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_13502_19190)">
             <path d="M2.66699 14.668L13.3337 14.668" stroke="#BBBBBD" stroke-linecap="round" />
@@ -273,7 +273,7 @@
           </div>
         </div>
         <div v-else class="order-columns-header">
-          <h6 class="font-weight-bold">Columns visibility</h6>
+          <h6 class="font-weight-bold">Columns Order</h6>
           <p>({{ $c_selectedColumns }} COLUMNS SELECTED)</p>
         </div>
         <div>
@@ -355,7 +355,7 @@ export default {
     hasComparisonColumns: { type: Boolean, default: false },
     hasCustomMetrics: { type: Boolean, default: false },
     nativeFields: { type: Array, default: () => [] },
-    currentPreset: { type: Object, default: () => {} },
+    selectedPreset: { type: Object, default: () => {} },
     savePreset: { type: Function, default: () => {} },
     hasPresets: { type: Boolean, default: false },
     infoType: { type: String, default: 'tooltip' },
@@ -381,7 +381,7 @@ export default {
       newPresetName: '',
       editMode: false,
       editPresetLoader: false,
-      editedPresetName: '',
+      editedPresetName: this.selectedPreset?.details.presetName || '',
     };
   },
   computed: {
@@ -579,14 +579,14 @@ export default {
       this.searchModel = '';
     },
     $_switchEditMode(value) {
-      this.editedPresetName = this.currentPreset.name;
+      this.editedPresetName = this.selectedPreset.details.presetName;
       this.editMode = value;
     },
     async $_editPresetName() {
       this.editPresetLoader = true;
       const preset = {
         name: this.editedPresetName,
-        fields: this.currentPreset.fields,
+        fields: this.selectedPreset.fields,
       }
       await this.editPreset(preset);
       this.editedPresetName = '';
@@ -774,11 +774,6 @@ export default {
                       padding-top: 2px;
                       font-weight: 600;
                     }
-  
-                    &::after {
-                      width: 20px !important;
-                      height: 20px !important;
-                    }
                   }
                   .custom-control-input:checked ~ .custom-control-label::before,
                   .custom-control-input:indeterminate ~ .custom-control-label::before {
@@ -950,14 +945,7 @@ export default {
               margin-bottom: -12px;
               align-items: center;
               gap: 3px;
-
-              .custom-control-label {
-                &::after {
-                  width: 15px;
-                  height: 15px;
-                }
-              }
-
+              
               .custom-control-input:checked ~ .custom-control-label::before {
                 background-color: #4158D0;
                 border-color: #4158D0;
