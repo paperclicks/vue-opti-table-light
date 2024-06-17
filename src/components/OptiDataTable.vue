@@ -60,8 +60,8 @@
                     Your custom presets
                   </b-dropdown-header>
                   <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio v-for="(preset, i) in preset_list.user_presets" class="user-preset-label preset-radio"
-                    v-model="selectedPreset" :key="preset.details._id" :value="preset.details.presetName" @change="() => $_changePreset(preset)">
+                    <b-form-radio v-for="(preset, i) in presetList.user_presets" class="user-preset-label preset-radio"
+                    v-model="selectedPreset.details.presetName" :key="preset.details._id" :value="preset.details.presetName" @change="() => $_changePreset(preset)">
                     <p class="preset-name">
                       {{ preset.details.presetName }}
                     </p>
@@ -76,8 +76,16 @@
                             d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
                         </svg>
                       </button>
-                      <b-modal hide-footer hide-header content-class="delete-preset-content" :id="`modal-${i}`"
-                        :ref="`modal-${i}`" centered size="sm">
+                      <b-modal 
+                        hide-footer 
+                        hide-header 
+                        content-class="delete-preset-content" 
+                        modal-class="optimizer-modal"
+                        :id="`modal-${i}`"
+                        :ref="`modal-${i}`" 
+                        centered
+                        no-close-on-backdrop
+                      >
                         <h5>Do you want to delete this column preset?</h5>
                         <p>The custom view of your table columns will be permanently deleted if you continue.</p>
                         <hr />
@@ -98,11 +106,11 @@
                     Suggested presets
                   </b-dropdown-header>
                   <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio class="preset-radio" v-for="(preset, i) in preset_list.admin_presets" v-model="selectedPreset" :key="preset.id"
-                      :value="preset.name" @change="() => $_changePreset(preset)">
+                    <b-form-radio class="preset-radio" v-for="(preset, i) in presetList.admin_presets" v-model="selectedPreset.details.presetName" :key="preset._id"
+                      :value="preset.details.presetName" @change="() => $_changePreset(preset)">
                       <span class="d-flex align-items-center justify-content-between">
                         <p class="preset-name">
-                          {{ preset.name }}
+                          {{ preset.details.presetName }}
                         </p>
                         <button
                           @click.prevent
@@ -114,9 +122,17 @@
                           </svg>
                         </button>
                       </span>
-                      <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.description" class="preset-description">{{ $_sliceText(preset.description, 60) }}</p>
-                      <b-modal hide-footer hide-header content-class="clone-preset-content" :id="`clone-modal-${i}`"
-                        :ref="`clone-modal-${i}`" centered>
+                      <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.details.presetDescription" class="preset-description">{{ $_sliceText(preset.details.presetDescription, 60) }}</p>
+                      <b-modal 
+                        hide-footer 
+                        hide-header 
+                        modal-class="optimizer-modal"
+                        content-class="clone-preset-content" 
+                        :id="`clone-modal-${i}`"
+                        :ref="`clone-modal-${i}`" 
+                        centered
+                        no-close-on-backdrop
+                      >
                         <h5>Save as Column Preset</h5>
                         <b-form-input v-model="newPresetName" placeholder="Preset name" />
                         <hr />
@@ -413,7 +429,7 @@
       :savePreset="savePreset" 
       :hasPresets="hasPresets"
       :infoType="infoType"
-      :currentPreset="currentPreset"
+      :selectedPreset="selectedPreset"
       :editPreset="editPreset"
     />
   </div>
@@ -1034,7 +1050,6 @@ export default {
   }
 }
 .delete-preset-content {
-  width: auto;
   .modal-body {
     h5 {
       white-space: nowrap;
