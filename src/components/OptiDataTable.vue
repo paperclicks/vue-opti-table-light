@@ -25,132 +25,18 @@
               <b-btn v-show="!saveSettingsLoading && !hasPresets" @click="$refs.columnsSettingsModal.show()"><i
                   class="fa fa-columns" aria-hidden="true"></i></b-btn>
             </div>
-            <b-dropdown v-else ref="presetDropdown" right no-caret id="preset-dropdown">
-              <template #button-content>
-                <span class="d-flex align-items-center">
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M4 1.30078C4.62126 1.30078 4.93188 1.30078 5.17691 1.40228C5.50362 1.5376 5.76318 1.79717 5.89851 2.12387C6 2.3689 6 2.67953 6 3.30078L6 12.6341C6 13.2554 6 13.566 5.89851 13.811C5.76318 14.1377 5.50361 14.3973 5.17691 14.5326C4.93188 14.6341 4.62125 14.6341 4 14.6341C3.37874 14.6341 3.06812 14.6341 2.82309 14.5326C2.49638 14.3973 2.23682 14.1377 2.10149 13.811C2 13.566 2 13.2554 2 12.6341L2 3.30078C2 2.67953 2 2.3689 2.10149 2.12387C2.23682 1.79717 2.49638 1.5376 2.82309 1.40228C3.06812 1.30078 3.37874 1.30078 4 1.30078Z"
-                      stroke="#5F6870" />
-                    <path
-                      d="M8 1.30078C8.62126 1.30078 8.93188 1.30078 9.17691 1.40228C9.50362 1.5376 9.76318 1.79717 9.89851 2.12387C10 2.3689 10 2.67953 10 3.30078L10 12.6341C10 13.2554 10 13.566 9.89851 13.811C9.76318 14.1377 9.50361 14.3973 9.17691 14.5326C8.93188 14.6341 8.62126 14.6341 8 14.6341C7.37874 14.6341 7.06812 14.6341 6.82309 14.5326C6.49638 14.3973 6.23682 14.1377 6.10149 13.811C6 13.566 6 13.2554 6 12.6341L6 3.30078C6 2.67953 6 2.3689 6.10149 2.12387C6.23682 1.79717 6.49639 1.5376 6.82309 1.40228C7.06812 1.30078 7.37874 1.30078 8 1.30078Z"
-                      stroke="#5F6870" />
-                    <path
-                      d="M12 1.30078C12.6213 1.30078 12.9319 1.30078 13.1769 1.40228C13.5036 1.5376 13.7632 1.79717 13.8985 2.12387C14 2.3689 14 2.67953 14 3.30078L14 12.6341C14 13.2554 14 13.566 13.8985 13.811C13.7632 14.1377 13.5036 14.3973 13.1769 14.5326C12.9319 14.6341 12.6213 14.6341 12 14.6341C11.3787 14.6341 11.0681 14.6341 10.8231 14.5326C10.4964 14.3973 10.2368 14.1377 10.1015 13.811C10 13.566 10 13.2554 10 12.6341L10 3.30078C10 2.67953 10 2.3689 10.1015 2.12387C10.2368 1.79717 10.4964 1.5376 10.8231 1.40228C11.0681 1.30078 11.3787 1.30078 12 1.30078Z"
-                      stroke="#5F6870" />
-                    <ellipse cx="8.00033" cy="3.30339" rx="0.666667" ry="0.666667"
-                      transform="rotate(90 8.00033 3.30339)" fill="#5F6870" />
-                    <ellipse cx="12.0003" cy="3.30339" rx="0.666667" ry="0.666667"
-                      transform="rotate(90 12.0003 3.30339)" fill="#5F6870" />
-                    <ellipse cx="4.00033" cy="3.30339" rx="0.666667" ry="0.666667"
-                      transform="rotate(90 4.00033 3.30339)" fill="#5F6870" />
-                  </svg>
-                  <p class="toggle-text">
-                    Columns
-                  </p>
-                </span>
-                <svg width="14" height="8" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10.6668 1L6.00016 5L1.3335 1" stroke="#5F6870" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </template>
-              <b-dropdown-form class="preset-wrapper">
-                <div v-if="$c_hasUserPresets">
-                  <b-dropdown-header>
-                    Your custom presets
-                  </b-dropdown-header>
-                  <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio v-for="(preset, i) in presetList.user_presets" class="user-preset-label preset-radio"
-                    v-model="selectedPreset.details.presetName" :key="preset.details._id" :value="preset.details.presetName" @change="() => $_changePreset(preset)">
-                    <p class="preset-name">
-                      {{ preset.details.presetName }}
-                    </p>
-                      <button 
-                        class="delete-preset-btn" 
-                        @click.prevent 
-                        v-b-modal="`modal-${i}`"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                          <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
-                        </svg>
-                      </button>
-                      <b-modal 
-                        hide-footer 
-                        hide-header 
-                        content-class="delete-preset-content" 
-                        modal-class="optimizer-modal"
-                        :id="`modal-${i}`"
-                        :ref="`modal-${i}`" 
-                        centered
-                        no-close-on-backdrop
-                      >
-                        <h5>Do you want to delete this column preset?</h5>
-                        <p>The custom view of your table columns will be permanently deleted if you continue.</p>
-                        <hr />
-                        <span>
-                          <button :disabled="presetLoader" @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
-                          <button @click="() => $_deletePreset(preset, `modal-${i}`)">
-                            {{ presetLoader ? 'Deleting' : 'Delete' }}
-                            <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
-                          </button>
-                        </span>
-                      </b-modal>
-                    </b-form-radio>
-                  </b-dropdown-group>
-                  <b-dropdown-divider></b-dropdown-divider>
-                </div>
-                <div v-if="$c_hasAdminPresets">
-                  <b-dropdown-header>
-                    Suggested presets
-                  </b-dropdown-header>
-                  <b-dropdown-group @submit.stop.prevent>
-                    <b-form-radio class="preset-radio" v-for="(preset, i) in presetList.admin_presets" v-model="selectedPreset.details.presetName" :key="preset._id"
-                      :value="preset.details.presetName" @change="() => $_changePreset(preset)">
-                      <span class="d-flex align-items-center justify-content-between">
-                        <p class="preset-name">
-                          {{ preset.details.presetName }}
-                        </p>
-                        <button
-                          @click.prevent
-                          v-b-modal="`clone-modal-${i}`"
-                          class="clone-preset-btn"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32">
-                            <path fill="#ABABAB" d="M5 5v17h4v-2H7V7h13v2h2V5H5zm5 5v17h17V10H10zm2 2h13v13H12V12z" />
-                          </svg>
-                        </button>
-                      </span>
-                      <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.details.presetDescription" class="preset-description">{{ $_sliceText(preset.details.presetDescription, 60) }}</p>
-                      <b-modal 
-                        hide-footer 
-                        hide-header 
-                        modal-class="optimizer-modal"
-                        content-class="clone-preset-content" 
-                        :id="`clone-modal-${i}`"
-                        :ref="`clone-modal-${i}`" 
-                        centered
-                        no-close-on-backdrop
-                      >
-                        <h5>Save as Column Preset</h5>
-                        <b-form-input v-model="newPresetName" placeholder="Preset name" />
-                        <hr />
-                        <span>
-                          <button :disabled="presetLoader" @click="() => $_closeModal(`clone-modal-${i}`)">Cancel</button>
-                          <button :disabled="$c_disableSavePresetButton" @click="() => $_savePreset(preset, `clone-modal-${i}`)">
-                            {{ presetLoader ? 'Saving' : 'Save' }}
-                            <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
-                          </button>
-                        </span>
-                      </b-modal>
-                    </b-form-radio>
-                  </b-dropdown-group>
-                </div>
-              </b-dropdown-form>
-              <b-dropdown-item-button class="column-settings-btn" @click="$refs.columnsSettingsModal.show()">Column
-                Settings</b-dropdown-item-button>
-            </b-dropdown>
+            <preset-dropdown
+              v-else
+              :sliceText="$_sliceText"
+              :presetList="presetList"
+              :openColumnSettings="$_openColumnSettings"
+              :createPreset="$_createPreset"
+              :selectedPreset="selectedPreset"
+              :deletePreset="deletePreset"
+              :savePreset="savePreset"
+              :clonePreset="clonePreset"
+              :changePreset="changePreset"
+            />
           </template>
         </b-input-group>
       </div>
@@ -448,6 +334,7 @@ import DataModel from './DataModel';
 import ColGroupTable from './ColGroupTable';
 import ColumnsSettingsModal from './ColumnsSettingsModal';
 import _ from 'lodash';
+import PresetDropdown from './PresetDropdown.vue';
 
 export default {
   name: 'vue-opti-table-light',
@@ -462,6 +349,7 @@ export default {
     FilterInput,
     ColGroupTable,
     ColumnsSettingsModal,
+    PresetDropdown,
   },
   model: {
     prop: 'tableModel',
@@ -650,48 +538,7 @@ export default {
     border-top: 0;
   }
   // Column Dropdown
-  .columns-dropdown {
-    .dropdown-menu {
-      min-width: 13.5rem;
-      max-height: 400px;
-      overflow-y: scroll;
-      padding: 0;
-      .dropdown-header {
-        color: #151b1e;
-        background-color: #FFF;
-        padding: 5px 10px;
-        label.custom-checkbox {
-          margin-bottom: 0;
-          .custom-control-description {
-            line-height: 20px;
-          }
-        }
-      }
-      label.custom-control {
-        margin-bottom: 0;
-      }
-      label > span.custom-control-description {
-        cursor: move;
-      }
-      .list-group-item {
-        padding: .5rem 1.25rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        cursor: move;
-        // .info {
-        //   .fa-sort {
-        //     visibility: hidden;
-        //   }
-        // }
-        // &:hover {
-        //   .info > .fa-sort {
-        //     visibility: visible;
-        //   }
-        // }
-      }
-    }
-  }
+
   // Table
   table {
     thead {
@@ -866,120 +713,6 @@ export default {
           padding: 0;
         }
       }
-
-      .dropdown-menu {
-        width: 300px;
-        padding: .5rem .8rem;
-        transform: translate3d(-155px, 38px, 0px);
- 
-        .preset-wrapper {
-          .b-dropdown-form {
-            padding: 0;
-
-            .preset-radio {
-              .custom-control-label {
-                &::after,
-                &::before {
-                  width: 20px !important;
-                  height: 20px !important;
-                }
-              }
-              .preset-name {
-                margin: 0;
-                padding: 0;
-              }
-              .preset-description {
-                margin-bottom: 0;
-              }
-            }
-            
-          }
-          
-          .dropdown-header {
-            padding: 0rem;
-            font-size: 13px;
-            text-transform: uppercase;
-            color: #ABABAB;
-            margin-bottom: 7px;
-          }
-
-          .list-unstyled {
-            .user-preset-label {
-              .modal-header,
-              .modal-footer {
-                display: none;
-              }
-              .custom-control-label {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              }
-              .delete-preset-btn {
-                background-color: transparent;
-                border: none;
-                margin-right: -20px;
-              }
-            }
-            .custom-control {
-              padding: 0;
-              margin-bottom: 7px;
-
-              .clone-preset-btn {
-                background-color: transparent;
-                border: none;
-                margin-right: -20px;
-              }
-            }
-            .custom-radio {
-              padding: 10px 28px;
-
-              &:has(input:checked) {
-                background-color: #F2F2FA;
-                border-radius: 5px;
-              }
-              &:hover { 
-                background-color: #F2F3F5;
-                border-radius: 5px;
-              }
-
-              .custom-control-input:checked,
-              .custom-control-input:checked ~ .custom-control-label::before {
-                background-color: #4158D0 !important;
-                border-color: #4158D0 !important;
-              }
-
-              
-              .custom-control-label {
-                padding-left: 5px;
-
-                .preset-description {
-                  font-size: 13px;
-                  color: #ABABAB;
-                }
-
-                &::after,
-                &::before {
-                  width: 15px;
-                  height: 15px;
-                }
-              }
-            }
-          }
-        }
-        button[type = "button"] {
-          color: #4158D0;
-          border: 1.4px solid #4158D0;
-          padding: 3px 2px;
-          border-radius: 8px;
-          text-align: center;
-          margin-bottom: 5px;
-
-          &:hover {
-            background-color: white;
-          }
-        }
-      }
     }
   }
 }
@@ -1053,9 +786,6 @@ export default {
   .modal-body {
     h5 {
       white-space: nowrap;
-    }
-    p {
-      font-size: .8rem;
     }
 
     span {
