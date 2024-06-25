@@ -179,40 +179,15 @@ export default {
     this.$refs['csv-button'].generate();
   },
 
-  // Handle Presets
-  async $_changePreset(preset) {
-    this.changePreset(preset);
-    this.$refs.presetDropdown.hide(true);
+  $_openColumnSettings() {
+    this.$refs.columnsSettingsModal.show();
+    this.$refs.columnsSettingsModal.presetEnabled = false;
+    this.$refs.columnsSettingsModal.newPresetName = '';
   },
 
-  async $_savePreset(preset, refName) {
-    this.presetLoader = true;
-    await this.savePreset(preset)
-    this.presetLoader = false;
-    this.$_closeModal(refName);
-  },
-
-  async $_closeModal(refName) {
-    const ref = this.$refs[refName];
-    if (ref?.length) {
-      ref[0].hide(true);
-    } else {
-      ref.hide(true);
-    }
-  },
-
-  async $_deletePreset(preset, refName) {
-    this.presetLoader = true;
-    await this.deletePreset(preset);
-    this.presetLoader = false;
-    this.$_closeModal(refName);
-  },
-
-  async $_clonePreset(preset, refName) {
-    this.presetLoader = true;
-    await this.clonePreset(preset);
-    this.presetLoader = false;
-    this.$_closeModal(refName);
+  $_createPreset() {
+    this.$refs.columnsSettingsModal.show();
+    this.$refs.columnsSettingsModal.presetEnabled = true;
   },
 
   $_checkAllColumnsHeight() {

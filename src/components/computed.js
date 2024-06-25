@@ -83,19 +83,10 @@ export default {
   $c_headerPopover() {
     return this.showHeaderPopover;
   },
-  $c_disableSavePresetButton() {
-    return !this.newPresetName.length;
-  },
   $c_allPresets() {
     if (this.presetList) {
       return [...this.presetList?.user_presets, ...this.presetList?.admin_presets];
     }
     return [];
-  },
-  $c_hasUserPresets() {
-    return this.presetList?.user_presets.length > 0;
-  },
-  $c_hasAdminPresets() {
-    return this.presetList?.admin_presets.length > 0;
   },
 };

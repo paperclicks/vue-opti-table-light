@@ -7,9 +7,10 @@
       <span v-if="!hasPresets">
         <h4>Column Settings</h4>
       </span>
-      <span class="d-flex align-items-end ml-1" v-if="!editMode && hasPresets">
-        <h4>{{ selectedPreset.details.presetName }}</h4>
-        <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18" class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <span class="d-flex align-items-end ml-1 preset-header" v-if="!editMode && hasPresets">
+        <h4>{{ selectedPreset.name }}</h4>
+        <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18"
+          class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_13502_19190)">
             <path d="M2.66699 14.668L13.3337 14.668" stroke="#BBBBBD" stroke-linecap="round" />
             <path
@@ -24,25 +25,15 @@
         </svg>
       </span>
       <span v-else-if="editMode && hasPresets" class="preset-edit-name">
-        <b-form-input placeholder="Edit preset name" v-model="editedPresetName" size="sm" />
+        <b-form-input placeholder="Edit preset name" v-model="editedPresetName" size="xl" />
         <span v-if="!editPresetLoader" class="d-flex align-items-center">
           <button :disabled="$c_disableEditPresetButton" class="tick-btn" @click="$_editPresetName">
             <i class="fa fa-check" aria-hidden="true"></i>
           </button>
-          <button 
-            class="cancel-btn" 
-            @click="$_switchEditMode(false)"
-          >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-              >
-              <path
-                fill="#262626"
-                d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6l-5.6 5.6Z"
-              />
+          <button class="cancel-btn" @click="$_switchEditMode(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#262626"
+                d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6l-5.6 5.6Z" />
             </svg>
           </button>
         </span>
@@ -61,8 +52,21 @@
         <b-nav v-if="hasGroups" class="groups-container" pills v-b-scrollspy:nav-scroller>
           <b-nav-item v-for="(group, index) in $c_nativeFields" @click="scrollIntoView" :href="`#${group.group}`"
             :key="index">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 56 56">
-              <path fill="currentColor" d="M8.453 49.75h39.82c4.195 0 6.633-2.437 6.633-7.266v-24.68c0-4.827-2.46-7.241-7.336-7.241H24.766c-1.594 0-2.555-.399-3.727-1.383l-1.43-1.196c-1.547-1.289-2.742-1.734-5.062-1.734H7.562c-4.101 0-6.468 2.344-6.468 7.078v29.156c0 4.852 2.484 7.266 7.359 7.266M4.867 13.516c0-2.32 1.242-3.492 3.469-3.492h5.25c1.547 0 2.484.374 3.68 1.406l1.43 1.172c1.523 1.265 2.765 1.734 5.085 1.734H47.5c2.32 0 3.633 1.242 3.633 3.68v1.406H4.867Zm3.656 32.46c-2.343 0-3.656-1.242-3.656-3.68V22.962h46.266v19.36c0 2.413-1.313 3.656-3.633 3.656Z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <g clip-path="url(#clip0_14057_103242)">
+                <path d="M11.9998 6.66797L8.6665 6.66797" stroke="#262626" stroke-linecap="round" />
+                <path
+                  d="M6.6665 2H10.9998C11.3095 2 11.4643 2 11.5942 2.01711C12.4917 2.13526 13.1979 2.84148 13.3161 3.73895C13.3332 3.86891 13.3332 4.02372 13.3332 4.33333"
+                  stroke="#262626" />
+                <path
+                  d="M1.3335 4.63186C1.3335 4.04351 1.3335 3.74933 1.37973 3.50429C1.58326 2.42557 2.42704 1.58179 3.50575 1.37826C3.7508 1.33203 4.04497 1.33203 4.63333 1.33203C4.89111 1.33203 5.02001 1.33203 5.14388 1.34361C5.67793 1.39356 6.18451 1.60339 6.59746 1.94571C6.69324 2.02511 6.78438 2.11625 6.96666 2.29853L7.3335 2.66537C7.87735 3.20922 8.14928 3.48114 8.47491 3.66231C8.65379 3.76184 8.84354 3.84043 9.0404 3.89655C9.39876 3.9987 9.78332 3.9987 10.5524 3.9987H10.8016C12.5565 3.9987 13.4339 3.9987 14.0043 4.51167C14.0567 4.55886 14.1067 4.60879 14.1539 4.66125C14.6668 5.2316 14.6668 6.10906 14.6668 7.86397V9.33203C14.6668 11.8462 14.6668 13.1033 13.8858 13.8843C13.1047 14.6654 11.8477 14.6654 9.3335 14.6654H6.66683C4.15267 14.6654 2.89559 14.6654 2.11454 13.8843C1.3335 13.1033 1.3335 11.8462 1.3335 9.33203V4.63186Z"
+                  stroke="#262626" />
+              </g>
+              <defs>
+                <clipPath id="clip0_14057_103242">
+                  <rect width="16" height="16" fill="white" />
+                </clipPath>
+              </defs>
             </svg>
             <p>
               {{ group.label }}
@@ -258,8 +262,7 @@
               <g clip-path="url(#clip0_13502_18627)">
                 <circle cx="8.00016" cy="7.9987" r="6.66667" stroke="#BBBBBD" />
                 <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round" />
-                <circle cx="0.666667" cy="0.666667" r="0.666667" transform="matrix(1 0 0 -1 7.3335 6)"
-                  fill="#BBBBBD" />
+                <circle cx="0.666667" cy="0.666667" r="0.666667" transform="matrix(1 0 0 -1 7.3335 6)" fill="#BBBBBD" />
               </g>
               <defs>
                 <clipPath id="clip0_13502_18627">
@@ -284,10 +287,10 @@
                 v-for="(col, index) in $c_model" v-show="col.display" :key="`item-${index}`">
                 <div class="d-flex align-items-center">
                   <svg style="cursor: grab" v-if="selectedColumnType === 'order'" xmlns="http://www.w3.org/2000/svg"
-                  width="17" height="17" viewBox="0 0 48 48">
-                  <path fill="currentColor" fill-rule="evenodd"
-                    d="M19 10a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm22-32a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
-                    clip-rule="evenodd" />
+                    width="17" height="17" viewBox="0 0 48 48">
+                    <path fill="currentColor" fill-rule="evenodd"
+                      d="M19 10a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm22-32a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-4 18a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm0 14a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
+                      clip-rule="evenodd" />
                   </svg>
                   <input :checked="col.comparable" :disabled="$_disableBasedOnFormat(col)"
                     @change="(e) => $_makeComparable(e, col)" type="checkbox" class="mr-1"
@@ -317,7 +320,7 @@
           <b-form-checkbox v-model="presetEnabled" />
           <p>Save as a column preset</p>
         </span>
-        <b-form-input v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="sm" />
+        <b-form-input v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
       </div>
       <div>
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
@@ -381,7 +384,7 @@ export default {
       newPresetName: '',
       editMode: false,
       editPresetLoader: false,
-      editedPresetName: this.selectedPreset?.details.presetName || '',
+      editedPresetName: this.selectedPreset?.name || '',
     };
   },
   computed: {
@@ -560,6 +563,8 @@ export default {
         fields: this.model,
       };
       await this.savePreset(preset);
+      this.presetEnabled = false;
+      this.newPresetName = '';
       this.hide();
     },
     $_disableBasedOnFormat(col) {
@@ -579,15 +584,15 @@ export default {
       this.searchModel = '';
     },
     $_switchEditMode(value) {
-      this.editedPresetName = this.selectedPreset.details.presetName;
+      this.editedPresetName = this.selectedPreset.name;
       this.editMode = value;
     },
     async $_editPresetName() {
       this.editPresetLoader = true;
       const preset = {
         name: this.editedPresetName,
-        fields: this.selectedPreset.fields,
-      }
+        id: this.selectedPreset.id,
+      };
       await this.editPreset(preset);
       this.editedPresetName = '';
       this.editMode = false;
@@ -867,8 +872,6 @@ export default {
             }
 
             .sortable-container {
-              max-height: 540px !important;
-              height: 540px !important;
               padding: 11px;
               overflow-y: auto;
 
