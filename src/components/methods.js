@@ -91,24 +91,26 @@ export default {
     if (this.saveSettings) {
       this.saveSettingsLoading = true;
       try {
-        const fields = JSON.parse(JSON.stringify(customizedFields)).map((item) => {
-          const field = {
-            header: {
-              content: item.header.content,
-            },
-            item: {
-              key: item.item.key,
-              sortable: item.item.sortable || true,
-            },
-            display: item.display
-          };
-          if (item?.options) field.options = item.options;
-          if ('comparable' in item) field.comparable = item.comparable;
-          if (item.header.info) field.header.info = item.header.info;
-          if (typeof item.customMetric !== 'undefined') field.customMetric = item.customMetric;
-          return field;
-        });
+        const fields = this.$_filterFields(customizedFields);
         await this.saveSettings(fields);
+        this.saveSettingsLoading = false;
+      } catch (error) {
+        this.saveSettingsLoading = false;
+        throw Error('Save settings failed');
+      }
+    }
+  },
+
+  async $_savePreset(customizedFields, preset) {
+    if (this.savePreset) {
+      this.saveSettingsLoading = true;
+      try {
+        const fields = this.$_filterFields(customizedFields);
+        const payload = {
+          ...preset,
+          fields,
+        }
+        await this.savePreset(payload);
         this.saveSettingsLoading = false;
       } catch (error) {
         this.saveSettingsLoading = false;
@@ -180,9 +182,11 @@ export default {
   },
 
   $_openColumnSettings() {
-    this.$refs.columnsSettingsModal.show();
+    this.saveSettingsLoading = true;
     this.$refs.columnsSettingsModal.presetEnabled = false;
     this.$refs.columnsSettingsModal.newPresetName = '';
+    this.$refs.columnsSettingsModal.show();
+    this.saveSettingsLoading = false;
   },
 
   $_createPreset() {
@@ -214,6 +218,32 @@ export default {
 
   $_sliceText(text, length) {
     return text.length > length ? `${text.slice(0, length)}...` : text;
+  },
+
+  $_filterFields(customizedFields) {
+    return JSON.parse(JSON.stringify(customizedFields)).map((item) => {
+      const field = {
+        header: {
+          content: item.header.content,
+        },
+        item: {
+          key: item.item.key,
+          sortable: item.item.sortable || true,
+          type: item.item.type,
+        },
+        display: item.display
+      };
+      if (item?.options)
+        field.options = item.options;
+      if ('comparable' in item)
+        field.comparable = item.comparable;
+      if (item.header.info)
+        field.header.info = item.header.info;
+      if (typeof item.customMetric !== 'undefined')
+        field.customMetric = item.customMetric;
+      return field;
+    });
   }
 
 };
+

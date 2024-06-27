@@ -2,7 +2,7 @@
     <b-dropdown ref="presetDropdown" right no-caret id="preset-dropdown">
         <template #button-content>
             <span class="d-flex align-items-center">
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-show="!saveSettingsLoading" width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M4 1.30078C4.62126 1.30078 4.93188 1.30078 5.17691 1.40228C5.50362 1.5376 5.76318 1.79717 5.89851 2.12387C6 2.3689 6 2.67953 6 3.30078L6 12.6341C6 13.2554 6 13.566 5.89851 13.811C5.76318 14.1377 5.50361 14.3973 5.17691 14.5326C4.93188 14.6341 4.62125 14.6341 4 14.6341C3.37874 14.6341 3.06812 14.6341 2.82309 14.5326C2.49638 14.3973 2.23682 14.1377 2.10149 13.811C2 13.566 2 13.2554 2 12.6341L2 3.30078C2 2.67953 2 2.3689 2.10149 2.12387C2.23682 1.79717 2.49638 1.5376 2.82309 1.40228C3.06812 1.30078 3.37874 1.30078 4 1.30078Z"
                         stroke="#5F6870" />
@@ -19,6 +19,8 @@
                     <ellipse cx="4.00033" cy="3.30339" rx="0.666667" ry="0.666667"
                         transform="rotate(90 4.00033 3.30339)" fill="#5F6870" />
                 </svg>
+                <i v-show="saveSettingsLoading" class="fa fa-spinner fa-spin" aria-hidden="true"
+                title="Saving..."></i>
                 <p class="toggle-text">
                     Columns
                 </p>
@@ -54,7 +56,7 @@
                         <p class="preset-name">
                             {{ preset.name }}
                         </p>
-                        <button class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
+                        <button class="delete-preset-btn" :disabled="currentPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
@@ -141,7 +143,7 @@
                                 <button :disabled="presetLoader"
                                     @click="() => $_closeModal(`clone-modal-${i}`)">Cancel</button>
                                 <button :disabled="$c_disableSavePresetButton"
-                                    @click="() => $_savePreset(preset, `clone-modal-${i}`)">
+                                    @click="() => $_clonePreset(preset, `clone-modal-${i}`)">
                                     {{ presetLoader ? 'Saving' : 'Save' }}
                                     <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
                                 </button>
@@ -164,7 +166,7 @@
         <b-dropdown-item-button v-if="showAllAdminPresets || showAllUserPresets" @click="createPreset" class="column-settings-btn">
             Create new preset
         </b-dropdown-item-button>
-        <b-dropdown-item-button v-else class="column-settings-btn" @click="openColumnSettings">
+        <b-dropdown-item-button v-else class="column-settings-btn" @click="openSettings">
             Column Settings
         </b-dropdown-item-button>
     </b-dropdown>
@@ -185,6 +187,7 @@ export default {
         clonePreset: { type: Function, default: () => [] },
         changePreset: { type: Function, default: () => [] },
         createPreset: { type: Function, default: () => [] },
+        saveSettingsLoading: { type: Boolean },
     },
     computed: {
         $c_userPresetsList() {
@@ -208,6 +211,9 @@ export default {
         $c_hasAdminPresets() {
             return this.presetList?.admin_presets?.length > 0;
         },
+        $c_isAdminPreset() {
+          return this.selectedPreset?.isAdmin;
+        }
     },
     data() {
         return {
@@ -228,15 +234,15 @@ export default {
         async $_closeModal(refName) {
             const ref = this.$refs[refName];
             if (ref?.length) {
-                ref[0].hide(true);
+                ref[0]?.hide();
             } else {
-                ref.hide(true);
+                ref?.hide();
             }
         },
         async $_deletePreset(id, refName) {
             this.presetLoader = true;
             await this.deletePreset(id);
-            this.presetLoader = false;
+            this.presetLoader = false;  
             this.$_closeModal(refName);
         },
         async $_savePreset(preset, refName) {
@@ -246,15 +252,23 @@ export default {
             this.$_closeModal(refName);
         },
 
-        async $_clonePreset(id, refName) {
+        async $_clonePreset(preset, refName) {
             this.presetLoader = true;
-            await this.clonePreset(id);
+            await this.clonePreset(preset, this.newPresetName);
             this.presetLoader = false;
+            this.newPresetName = '';
             this.$_closeModal(refName);
         },
         async $_changePreset(preset) {
             this.changePreset(preset);
             this.$refs.presetDropdown.hide(true);
+        },
+        openSettings() {
+          if (this.$c_isAdminPreset) {
+            this.createPreset();
+          } else {
+            this.openColumnSettings();
+          }
         },
     }
 }
@@ -321,6 +335,11 @@ export default {
             background-color: transparent;
             border: none;
             margin-right: -20px;
+
+            &:disabled {
+              cursor: not-allowed;
+              opacity: 0.5;
+            }
           }
         }
         .custom-control {
