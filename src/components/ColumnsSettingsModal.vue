@@ -7,22 +7,24 @@
       <span v-if="!hasPresets">
         <h4>Column Settings</h4>
       </span>
-      <span class="d-flex align-items-end ml-1 preset-header" v-if="!editMode && hasPresets">
+      <span class="d-flex align-items-end preset-header" v-if="!editMode && hasPresets">
         <h4>{{ selectedPreset.name }}</h4>
-        <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18"
-          class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_13502_19190)">
-            <path d="M2.66699 14.668L13.3337 14.668" stroke="#BBBBBD" stroke-linecap="round" />
-            <path
-              d="M9.25903 2.44065L9.75336 1.94631C10.5724 1.12727 11.9003 1.12727 12.7194 1.94631C13.5384 2.76536 13.5384 4.09329 12.7194 4.91233L12.225 5.40666M9.25903 2.44065C9.25903 2.44065 9.32082 3.49111 10.2477 4.41799C11.1746 5.34487 12.225 5.40666 12.225 5.40666M9.25903 2.44065L4.71437 6.98531C4.40655 7.29313 4.25264 7.44704 4.12027 7.61674C3.96413 7.81693 3.83026 8.03353 3.72104 8.26271C3.62845 8.45699 3.55962 8.66348 3.42196 9.07647L2.83862 10.8265M12.225 5.40666L7.68038 9.95132C7.37256 10.2591 7.21865 10.4131 7.04895 10.5454C6.84876 10.7016 6.63216 10.8354 6.40298 10.9446C6.2087 11.0372 6.0022 11.1061 5.58922 11.2437L3.83922 11.8271M3.83922 11.8271L3.41144 11.9697C3.20821 12.0374 2.98414 11.9845 2.83266 11.833C2.68118 11.6815 2.62829 11.4575 2.69603 11.2542L2.83862 10.8265M3.83922 11.8271L2.83862 10.8265"
-              stroke="#BBBBBD" />
-          </g>
-          <defs>
-            <clipPath id="clip0_13502_19190">
-              <rect width="16" height="16" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
+        <span v-show="$c_showEditIcon" class="edit-icon">
+          <svg @click="() => $_switchEditMode(!editMode)" style="cursor: pointer;" width="18" height="18"
+            class="ml-2 mb-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_13502_19190)">
+              <path d="M2.66699 14.668L13.3337 14.668" stroke="#BBBBBD" stroke-linecap="round" />
+              <path
+                d="M9.25903 2.44065L9.75336 1.94631C10.5724 1.12727 11.9003 1.12727 12.7194 1.94631C13.5384 2.76536 13.5384 4.09329 12.7194 4.91233L12.225 5.40666M9.25903 2.44065C9.25903 2.44065 9.32082 3.49111 10.2477 4.41799C11.1746 5.34487 12.225 5.40666 12.225 5.40666M9.25903 2.44065L4.71437 6.98531C4.40655 7.29313 4.25264 7.44704 4.12027 7.61674C3.96413 7.81693 3.83026 8.03353 3.72104 8.26271C3.62845 8.45699 3.55962 8.66348 3.42196 9.07647L2.83862 10.8265M12.225 5.40666L7.68038 9.95132C7.37256 10.2591 7.21865 10.4131 7.04895 10.5454C6.84876 10.7016 6.63216 10.8354 6.40298 10.9446C6.2087 11.0372 6.0022 11.1061 5.58922 11.2437L3.83922 11.8271M3.83922 11.8271L3.41144 11.9697C3.20821 12.0374 2.98414 11.9845 2.83266 11.833C2.68118 11.6815 2.62829 11.4575 2.69603 11.2542L2.83862 10.8265M3.83922 11.8271L2.83862 10.8265"
+                stroke="#BBBBBD" />
+            </g>
+            <defs>
+              <clipPath id="clip0_13502_19190">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </span>
       </span>
       <span v-else-if="editMode && hasPresets" class="preset-edit-name">
         <b-form-input placeholder="Edit preset name" v-model="editedPresetName" size="xl" />
@@ -460,7 +462,10 @@ export default {
     },
     $c_splitContentLength() {
       return this.hasGroups ? 20 : 40;
-    }
+    },
+    $c_showEditIcon() {
+      return !this.selectedPreset?.isAdmin;
+    },
   },
   created() {
     this.$watch('displayModel', () => {
@@ -560,9 +565,9 @@ export default {
     async $_savePreset() {
       const preset = {
         name: this.newPresetName,
-        fields: this.model,
       };
-      await this.savePreset(preset);
+      this.$emit('save-preset', this.model, preset);
+      this.$emit('input', this.model);
       this.presetEnabled = false;
       this.newPresetName = '';
       this.hide();
@@ -593,7 +598,13 @@ export default {
         name: this.editedPresetName,
         id: this.selectedPreset.id,
       };
-      await this.editPreset(preset);
+      try {
+        await this.editPreset(preset);
+      } catch (error) {
+        this.editMode = false;
+        this.editPresetLoader = false;
+      }
+      this.selectedPreset.name = this.editedPresetName;
       this.editedPresetName = '';
       this.editMode = false;
       this.editPresetLoader = false;

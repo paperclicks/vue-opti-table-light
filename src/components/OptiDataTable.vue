@@ -29,6 +29,7 @@
               v-else
               :sliceText="$_sliceText"
               :presetList="presetList"
+              :saveSettingsLoading="saveSettingsLoading"
               :openColumnSettings="$_openColumnSettings"
               :createPreset="$_createPreset"
               :selectedPreset="selectedPreset"
@@ -304,6 +305,7 @@
       ref="columnsSettingsModal" 
       v-model="localHeaderFields" 
       @save="$_saveSettings"
+      @save-preset="$_savePreset"
       :update-custom-metric="updateCustomMetric" 
       :custom-metric-options="customMetricOptions"
       :metric-group-options="metricGroupOptions" 

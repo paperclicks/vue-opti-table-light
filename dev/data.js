@@ -25,7 +25,7 @@ export default function () {
               sortable: false,
               filter: false,
               group: "other",
-              type: "other",
+              type: "metric",
             },
             display: true,
             options: {
@@ -3996,10 +3996,17 @@ const nativeFields = [
       label: "Search Feed Metrics",
     },
 ];
+// const currentPreset = {
+//   id: "1",
+//   name: "Optimizer 1",
+//   description:
+//     "View metrics related to how often your ads are delivered. View common performance metrics.",
+//   isAdmin: true,
+// };
 const currentPreset = {
-    id: "6668379018f6683bea6bfe91",
-    name: "Test 2",
-};
+  id: "6668379018f6683bea6bfe92",
+  name: "Test 1",
+}; 
 const presetList = {
     user_presets: [
       {
@@ -4033,18 +4040,20 @@ const presetList = {
         name: "Optimizer 1",
         description:
           "View metrics related to how often your ads are delivered. View common performance metrics.",
+        isAdmin: true,
       },
       {
         id: "2",
         name: "Optimizer 2",
         description:
           "View metrics related to how often your ads are delivered. View common performance metrics.",
+        isAdmin: true,
       },
       {
         id: "3",
         name: "Optimizer 3",
-        description:
-          "View metrics related to how often your ads are delivered. View common performance metrics.",
+        description: "View metrics related to how often your ads are delivered. View common performance metrics.",
+        isAdmin: true,
       },
     ],
 };
