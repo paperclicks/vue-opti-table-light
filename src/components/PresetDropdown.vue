@@ -207,7 +207,7 @@ export default {
     watch: {
         selectedPreset: {
             handler(newValue) {
-                this.localSelectedPreset = newValue;
+                this.localSelectedPreset = newValue?.name;
             },
             deep: true,
         },
@@ -248,7 +248,6 @@ export default {
             this.$_closeModal(refName);
         },
         async $_changePreset(preset) {
-            this.$emit('localSelectedPreset', preset)
             this.changePreset(preset);
             this.$refs.presetDropdown.hide(true);
         },
