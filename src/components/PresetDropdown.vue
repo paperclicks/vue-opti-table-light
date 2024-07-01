@@ -48,15 +48,15 @@
                     <b-form-radio
                         v-for="(preset, i) in $c_userPresetsList" 
                         class="user-preset-label preset-radio"
-                        v-model="currentPreset" 
                         :key="preset.id" 
+                        v-model="localSelectedPreset"
                         :value="preset.name"
                         @change="() => $_changePreset(preset)"
                     >
                         <p class="preset-name">
-                            {{ preset.name }}
+                            {{ sliceText(preset.name, 15) }}
                         </p>
-                        <button class="delete-preset-btn" :disabled="currentPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
+                        <button class="delete-preset-btn" :disabled="localSelectedPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
@@ -66,8 +66,6 @@
                             modal-class="optimizer-modal" :id="`modal-${i}`" :ref="`modal-${i}`" centered
                             no-close-on-backdrop>
                             <h5>Do you want to delete this column preset?</h5>
-                            <p>The custom view of your table columns will be permanently deleted if you continue.</p>
-                            <hr />
                             <span>
                                 <button :disabled="presetLoader"
                                     @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
@@ -107,48 +105,30 @@
                 <b-dropdown-group class="preset-list" @submit.stop.prevent>
                     <b-form-radio 
                         class="preset-radio" 
-                        v-model="currentPreset"
-                        v-for="(preset, i) in $c_adminPresetsList" 
+                        v-model="localSelectedPreset"
+                        v-for="(preset) in $c_adminPresetsList" 
                         :key="preset.id"
                         :value="preset.name"
                         @change="() => $_changePreset(preset)"
                     >
                         <span class="d-flex align-items-center justify-content-between">
                             <p class="preset-name">
-                                {{ preset.name }}
+                                {{ sliceText(preset.name, 15) }}
                             </p>
-                            <button @click.prevent v-b-modal="`clone-modal-${i}`" class="clone-preset-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
-                                    <path fill="#ABABAB"
-                                        d="M5 5v17h4v-2H7V7h13v2h2V5H5zm5 5v17h17V10H10zm2 2h13v13H12V12z" />
-                                </svg>
-                            </button>
+                            <svg v-b-tooltip.hover.bottomright.v-secondary.nofade
+                            :title="preset.description" class="ml-2" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="none">
+                                <g clip-path="url(#clip0_14164_25327)">
+                                  <circle cx="7.99967" cy="7.9987" r="6.66667" stroke="#BBBBBD"/>
+                                  <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round"/>
+                                  <circle cx="0.666667" cy="0.666667" r="0.666667" transform="matrix(1 0 0 -1 7.33301 6)" fill="#BBBBBD"/>
+                                </g>
+                                <defs>
+                                  <clipPath id="clip0_14164_25327">
+                                    <rect width="16" height="16" fill="white"/>
+                                  </clipPath>
+                                </defs>
+                              </svg>
                         </span>
-                        <p v-b-tooltip.hover.top.v-secondary.nofade :title="preset.description"
-                            class="preset-description">{{ sliceText(preset.description, 60) }}</p>
-                        <b-modal 
-                            hide-footer 
-                            hide-header 
-                            modal-class="optimizer-modal"
-                            content-class="clone-preset-content" 
-                            :id="`clone-modal-${i}`" 
-                            :ref="`clone-modal-${i}`"
-                            centered 
-                            no-close-on-backdrop
-                        >
-                            <h5>Save as Column Preset</h5>
-                            <b-form-input v-model="newPresetName" placeholder="Preset name" />
-                            <hr />
-                            <span>
-                                <button :disabled="presetLoader"
-                                    @click="() => $_closeModal(`clone-modal-${i}`)">Cancel</button>
-                                <button :disabled="$c_disableSavePresetButton"
-                                    @click="() => $_clonePreset(preset, `clone-modal-${i}`)">
-                                    {{ presetLoader ? 'Saving' : 'Save' }}
-                                    <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
-                                </button>
-                            </span>
-                        </b-modal>
                     </b-form-radio>
                 </b-dropdown-group>
                 <button
@@ -213,16 +193,24 @@ export default {
         },
         $c_isAdminPreset() {
           return this.selectedPreset?.isAdmin;
-        }
+        },
     },
     data() {
         return {
             showAllUserPresets: false,
             showAllAdminPresets: false,
             presetLoader: false,
-            currentPreset: this.selectedPreset.name,
+            localSelectedPreset: this.selectedPreset.name,
             newPresetName: "",
         }
+    },
+    watch: {
+        selectedPreset: {
+            handler(newValue) {
+                this.localSelectedPreset = newValue;
+            },
+            deep: true,
+        },
     },
     methods: {
         $_setShowAllUserPresets(value) {
@@ -260,7 +248,7 @@ export default {
             this.$_closeModal(refName);
         },
         async $_changePreset(preset) {
-            this.changePreset(preset);
+           this. $emit('localSelectedPreset', preset)
             this.$refs.presetDropdown.hide(true);
         },
         openSettings() {
@@ -298,9 +286,6 @@ export default {
               .preset-name {
                 margin: 0;
                 padding: 0;
-              }
-              .preset-description {
-                margin-bottom: 0;
               }
             }
         }
@@ -345,12 +330,6 @@ export default {
         .custom-control {
           padding: 0;
           margin-bottom: 7px;
-
-          .clone-preset-btn {
-            background-color: transparent;
-            border: none;
-            margin-right: -20px;
-          }
         }
         .custom-radio {
           padding: 10px 28px;
@@ -419,6 +398,40 @@ export default {
         margin: 0;
     }
   }
+  .delete-preset-content {
+    .modal-body {
+      h5 {
+        white-space: nowrap;
+        text-align: center;
+      }
+  
+      span {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+  
+        button {
+          border-color: transparent;
+          border-radius: 3px;
+          font-weight: 500;
+          padding: 4px 7px;
+  
+          &:first-child {
+            background-color: white;
+            color: #6a737c;
+            border-color: #ccd0d5;
+          }
+          &:last-child {
+            background-color: red;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+        }
+      }
+    }
+}
 /*.columns-dropdown {
     .dropdown-menu {
       min-width: 13.5rem;
