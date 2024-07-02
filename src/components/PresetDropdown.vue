@@ -220,7 +220,7 @@ export default {
         },
         presetList: {
             handler(newValue) {
-                this.localSelectedPreset = newValue;
+                this.localPresetList = newValue;
             },
             deep: true,
         }
