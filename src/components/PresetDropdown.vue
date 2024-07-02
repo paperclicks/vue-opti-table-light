@@ -51,10 +51,13 @@
                         :key="preset.id" 
                         v-model="localSelectedPreset"
                         :value="preset.name"
+                        v-b-tooltip.hover
+                        :title="preset.name"
+                        boundary="window"
                         @change="() => $_changePreset(preset)"
                     >
                         <p class="preset-name">
-                            {{ sliceText(preset.name, 15) }}
+                            {{ sliceText(preset.name, 25) }}
                         </p>
                         <button class="delete-preset-btn" :disabled="localSelectedPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -67,12 +70,12 @@
                             no-close-on-backdrop>
                             <h5>Do you want to delete this column preset?</h5>
                             <span>
-                                <button :disabled="presetLoader"
-                                    @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
-                                <button @click="() => $_deletePreset(preset, `modal-${i}`)">
-                                    {{ presetLoader ? 'Deleting' : 'Delete' }}
-                                    <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
-                                </button>
+                              <button @click="() => $_deletePreset(preset, `modal-${i}`)">
+                                {{ presetLoader ? 'Deleting' : 'Yes, delete it!' }}
+                                <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
+                              </button>
+                              <button :disabled="presetLoader"
+                                  @click="() => $_closeModal(`modal-${i}`)">No, keep it</button>
                             </span>
                         </b-modal>
                     </b-form-radio>
@@ -106,17 +109,16 @@
                     <b-form-radio 
                         class="preset-radio" 
                         v-model="localSelectedPreset"
-                        v-for="(preset) in $c_adminPresetsList" 
+                        v-for="(preset, index) in $c_adminPresetsList" 
                         :key="preset.id"
                         :value="preset.name"
                         @change="() => $_changePreset(preset)"
                     >
-                        <span class="d-flex align-items-center justify-content-between">
+                        <span :id="`description-${index}`" class="d-flex align-items-center justify-content-between">
                             <p class="preset-name">
-                                {{ sliceText(preset.name, 15) }}
+                                {{ sliceText(preset.name, 25) }}
                             </p>
-                            <svg v-b-tooltip.hover.bottomright.v-secondary.nofade
-                            :title="preset.description" class="ml-2" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="none">
+                            <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="none">
                                 <g clip-path="url(#clip0_14164_25327)">
                                   <circle cx="7.99967" cy="7.9987" r="6.66667" stroke="#BBBBBD"/>
                                   <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round"/>
@@ -129,6 +131,10 @@
                                 </defs>
                               </svg>
                         </span>
+                        <b-popover container="preset-list" boundary="window" :target="`description-${index}`" triggers="hover" placement="right">
+                          <template #title>{{ preset.name }}</template>
+                          <p>{{ preset.description }}</p>
+                        </b-popover>
                     </b-form-radio>
                 </b-dropdown-group>
                 <button
@@ -169,32 +175,6 @@ export default {
         createPreset: { type: Function, default: () => [] },
         saveSettingsLoading: { type: Boolean },
     },
-    computed: {
-        $c_userPresetsList() {
-            if (this.showAllUserPresets) {
-                return this.presetList.user_presets;
-            }
-            return this.presetList.user_presets.slice(0, 3);
-        },
-        $c_adminPresetsList() {
-            if (this.showAllAdminPresets) {
-                return this.presetList.admin_presets;
-            }
-            return this.presetList.admin_presets.slice(0, 3);
-        },
-        $c_disableSavePresetButton() {
-            return !this.newPresetName.length;
-        },
-        $c_hasUserPresets() {
-            return this.presetList?.user_presets?.length > 0;
-        },
-        $c_hasAdminPresets() {
-            return this.presetList?.admin_presets?.length > 0;
-        },
-        $c_isAdminPreset() {
-          return this.selectedPreset?.isAdmin;
-        },
-    },
     data() {
         return {
             showAllUserPresets: false,
@@ -202,7 +182,34 @@ export default {
             presetLoader: false,
             localSelectedPreset: this.selectedPreset.name,
             newPresetName: "",
+            localPresetList: this.presetList,
         }
+    },
+    computed: {
+        $c_userPresetsList() {
+            if (this.showAllUserPresets) {
+                return this.localPresetList.user_presets;
+            }
+            return this.localPresetList.user_presets.slice(0, 3);
+        },
+        $c_adminPresetsList() {
+            if (this.showAllAdminPresets) {
+                return this.localPresetList.admin_presets;
+            }
+            return this.localPresetList.admin_presets.slice(0, 3);
+        },
+        $c_disableSavePresetButton() {
+            return !this.newPresetName.length;
+        },
+        $c_hasUserPresets() {
+            return this.localPresetList?.user_presets?.length > 0;
+        },
+        $c_hasAdminPresets() {
+            return this.localPresetList?.admin_presets?.length > 0;
+        },
+        $c_isAdminPreset() {
+          return this.selectedPreset?.isAdmin;
+        },
     },
     watch: {
         selectedPreset: {
@@ -211,6 +218,12 @@ export default {
             },
             deep: true,
         },
+        presetList: {
+            handler(newValue) {
+                this.localSelectedPreset = newValue;
+            },
+            deep: true,
+        }
     },
     methods: {
         $_setShowAllUserPresets(value) {
@@ -412,16 +425,16 @@ export default {
   
         button {
           border-color: transparent;
-          border-radius: 3px;
+          border-radius: 6px;
           font-weight: 500;
           padding: 4px 7px;
   
-          &:first-child {
+          &:last-child {
             background-color: white;
             color: #6a737c;
-            border-color: #ccd0d5;
+            border-color: #e4e6e8;
           }
-          &:last-child {
+          &:first-child {
             background-color: red;
             color: white;
             display: flex;
