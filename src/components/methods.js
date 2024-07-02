@@ -189,8 +189,9 @@ export default {
     this.saveSettingsLoading = false;
   },
 
-  $_createPreset() {
+  $_createPreset(selectedPresetName) {
     this.$refs.columnsSettingsModal.show();
+    this.$refs.columnsSettingsModal.newPresetName = `${selectedPresetName} - Copy`;
     this.$refs.columnsSettingsModal.presetEnabled = true;
   },
 

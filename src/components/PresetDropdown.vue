@@ -51,12 +51,9 @@
                         :key="preset.id" 
                         v-model="localSelectedPreset"
                         :value="preset.name"
-                        v-b-tooltip.hover
-                        :title="preset.name"
-                        boundary="window"
                         @change="() => $_changePreset(preset)"
                     >
-                        <p class="preset-name">
+                        <p :id="`user-fields-${i}`" class="preset-name">
                             {{ sliceText(preset.name, 25) }}
                         </p>
                         <button class="delete-preset-btn" :disabled="localSelectedPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
@@ -68,16 +65,24 @@
                         <b-modal hide-footer hide-header content-class="delete-preset-content"
                             modal-class="optimizer-modal" :id="`modal-${i}`" :ref="`modal-${i}`" centered
                             no-close-on-backdrop>
-                            <h5>Do you want to delete this column preset?</h5>
+                            <h5>Delete this column preset?</h5>
+                            <p>This column preset and its custom selections will be deleted on all entity levels if you continue.</p>
                             <span>
+                              <button :disabled="presetLoader"
+                              @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
                               <button @click="() => $_deletePreset(preset, `modal-${i}`)">
-                                {{ presetLoader ? 'Deleting' : 'Yes, delete it!' }}
+                                {{ presetLoader ? 'Deleting' : 'Delete' }}
                                 <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
                               </button>
-                              <button :disabled="presetLoader"
-                                  @click="() => $_closeModal(`modal-${i}`)">No, keep it</button>
                             </span>
                         </b-modal>
+                        <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`user-fields-${i}`" triggers="hover" placement="right">
+                          <template #title>{{ preset.name }}</template>
+                          <p>{{ preset.description }}</p>
+                          <ul v-for="(field, i) in preset.fields" :key="i">
+                            <li>{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                          </ul>
+                        </b-popover>
                     </b-form-radio>
                 </b-dropdown-group>
                 <button
@@ -131,9 +136,12 @@
                                 </defs>
                               </svg>
                         </span>
-                        <b-popover container="preset-list" boundary="window" :target="`description-${index}`" triggers="hover" placement="right">
+                        <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`description-${index}`" triggers="hover" placement="right">
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
+                          <ul v-for="(field, i) in preset.fields" :key="i">
+                            <li>{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                          </ul>
                         </b-popover>
                     </b-form-radio>
                 </b-dropdown-group>
@@ -252,21 +260,13 @@ export default {
             this.presetLoader = false;
             this.$_closeModal(refName);
         },
-
-        async $_clonePreset(preset, refName) {
-            this.presetLoader = true;
-            await this.clonePreset(preset, this.newPresetName);
-            this.presetLoader = false;
-            this.newPresetName = '';
-            this.$_closeModal(refName);
-        },
         async $_changePreset(preset) {
             this.changePreset(preset);
             this.$refs.presetDropdown.hide(true);
         },
         openSettings() {
           if (this.$c_isAdminPreset) {
-            this.createPreset();
+            this.createPreset(this.localSelectedPreset);
           } else {
             this.openColumnSettings();
           }
@@ -415,28 +415,32 @@ export default {
     .modal-body {
       h5 {
         white-space: nowrap;
-        text-align: center;
+        font-weight: 700;
+      }
+
+      p {
+        font-size: 14px;
+        color: #636364;
       }
   
       span {
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         gap: 6px;
   
         button {
           border-color: transparent;
           border-radius: 6px;
-          font-weight: 500;
           padding: 4px 7px;
   
-          &:last-child {
-            background-color: white;
-            color: #6a737c;
-            border-color: #e4e6e8;
-          }
           &:first-child {
-            background-color: red;
+            background-color: #ABABAB;
             color: white;
+          }
+          &:last-child {
+            border: 1px solid #DC421F;
+            color: #DC421F;
+            background-color: transparent;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -444,6 +448,12 @@ export default {
         }
       }
     }
+}
+.preset-info {
+  .popover-body {
+    max-height: 300px;
+    overflow-y: auto;
+  }
 }
 /*.columns-dropdown {
     .dropdown-menu {

@@ -46,7 +46,6 @@ export default {
   presetList: { type: Object, default: () => ({}) },
   savePreset: { type: Function, default: () => {} },
   editPreset: { type: Function, default: () => {} },
-  clonePreset: { type: Function, default: () => {} },
   changePreset: { type: Function, default: () => {} },
   selectedPreset: { type: Object, default: () => ({}) },
   infoType: { type: String, default: 'tooltip' },
