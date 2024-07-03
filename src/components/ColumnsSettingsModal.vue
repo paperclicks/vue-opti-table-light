@@ -418,18 +418,7 @@ export default {
     },
     $c_visibilityColumns() {
       if (this.hasGroups) {
-        const groupedVisibilityColumns = [];
-        const definedGroups = this.$c_nativeFields;
-        definedGroups.forEach((group) => {
-          const items = this.displayModel.filter((col) => col.item?.group === group.group);
-          if (items.length > 0) {
-            groupedVisibilityColumns.push({ label: group.label, group: group.group, items });
-          }
-        });
-        Object.values(groupedVisibilityColumns).forEach((i) => {
-          this.groupedColumns.push(...i.items);
-        });
-        return groupedVisibilityColumns;
+        return this.groupVisibilityColumns();
       } else {
         return this.displayModel;
       }
@@ -492,6 +481,17 @@ export default {
     hide() {
       this.modal = false;
     },
+    groupVisibilityColumns() {
+      const groupedVisibilityColumns = [];
+        const definedGroups = this.$c_nativeFields;
+        definedGroups.forEach((group) => {
+          const items = this.displayModel.filter((col) => col.item?.group === group.group);
+          if (items.length > 0) {
+            groupedVisibilityColumns.push({ label: group.label, group: group.group, items });
+          }
+        });
+        return groupedVisibilityColumns;
+    },
     $_saveSettings() {
       this.$emit('save', this.model);
       this.$emit('input', this.model);
@@ -543,20 +543,29 @@ export default {
       col.display = false;
     },
     $_selectAllItemsOfGroup(checked, group) {
-      const groupItems = this.groupedColumns.filter((col) => col.item.group === group);
+      const groupItems = this.$_groupedItems(group);
       groupItems.forEach((col) => { col.display = checked; });
     },
     $_allItemsOfGroupChecked(group) {
-      const groupItems = this.groupedColumns.filter((col) => col.item.group === group);
+      const groupItems = this.$_groupedItems(group);
       return groupItems.every((col) => col.display);
     },
     $_partialItemsOfGroupChecked(group) {
-      const groupItems = this.groupedColumns.filter((col) => col.item.group === group);
+      const groupItems = this.$_groupedItems(group);
       const checkedGroupItems = groupItems.filter((col) => col.display);
       if (checkedGroupItems.length > 0 && checkedGroupItems.length < groupItems.length) {
         return true;
       }
       return false;
+    },
+    $_groupedItems(group) {
+      const groupedColumns = [];
+      const groupedVisibilityColumns = this.groupVisibilityColumns();
+      groupedVisibilityColumns.forEach((group) => {
+        groupedColumns.push(...group.items);
+      });
+      const groupItems = groupedColumns.filter((col) => col.item.group === group);
+      return groupItems;
     },
     $_makeComparable(e, col) {
       const checked = e.target.checked;
