@@ -80,7 +80,7 @@
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
                           <ul v-for="(field, i) in preset.fields" :key="i">
-                            <li>{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                            <li v-if="field.display">{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
                           </ul>
                         </b-popover>
                     </b-form-radio>
@@ -140,7 +140,7 @@
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
                           <ul v-for="(field, i) in preset.fields" :key="i">
-                            <li>{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                            <li v-if="field.display">{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
                           </ul>
                         </b-popover>
                     </b-form-radio>
