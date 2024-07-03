@@ -20,10 +20,16 @@
       :page="currentPage"
       :header-fields="$c_tableFields"
       :items="table.items"
+      :hasGroups="true"
+      :nativeFields="nativeFields"
+      :hasPresets="true"
+      :presetList="presetList"
+      :selectedPreset="currentPreset"
       :totals="table.totals"
       :exportCsvItems="$_csvFetchData"
       :column-filter-enable="true"
       :column-filter.sync="columnFilter"
+      :changePreset="$_changePreset"
       :column-filter-reset="false"
       :sticky="sticky"
       :update-custom-metric="$_updateCustomMetric"
@@ -86,10 +92,7 @@ export default {
       }
     },
     $c_tableFields() {
-      if (this.$c_tableSelect === 'table2') {
-        return this.table.fields2;
-      }
-      return this.table.fields;
+      return this.currentPreset.fields;
     },
   },
   methods: {
@@ -105,6 +108,11 @@ export default {
       console.log(evt);
       this.$_loadData(evt);
       console.log(this.pageCount);
+    },
+    $_changePreset(preset) {
+      const foundPreset = this.presetList.user_presets.find((p) => p.id === preset.id);
+      this.table.fields = foundPreset.fields;
+      this.currentPreset = foundPreset;
     },
     $_loadData({ page, limit, sortField, sortType, search, searchableFields }) {
       if (this.serverSidePagination) {
