@@ -203,7 +203,7 @@ export default {
             if (this.showAllAdminPresets) {
                 return this.localPresetList.admin_presets;
             }
-            return this.localPresetList.admin_presets.slice(0, 3);
+            return this.localPresetList.admin_presets.slice(0, 2);
         },
         $c_disableSavePresetButton() {
             return !this.newPresetName.length;
