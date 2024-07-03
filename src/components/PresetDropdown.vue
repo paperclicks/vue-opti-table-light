@@ -56,7 +56,7 @@
                         <p :id="`user-fields-${i}`" class="preset-name">
                             {{ sliceText(preset.name, 25) }}
                         </p>
-                        <button class="delete-preset-btn" :disabled="localSelectedPreset === preset.name" @click.prevent v-b-modal="`modal-${i}`">
+                        <button class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
@@ -178,7 +178,6 @@ export default {
         selectedPreset: { type: Object },
         savePreset: { type: Function, default: () => [] },
         deletePreset: { type: Function, default: () => [] },
-        clonePreset: { type: Function, default: () => [] },
         changePreset: { type: Function, default: () => [] },
         createPreset: { type: Function, default: () => [] },
         saveSettingsLoading: { type: Boolean },
@@ -241,16 +240,18 @@ export default {
             this.showAllAdminPresets = value;
         },
         async $_closeModal(refName) {
-            const ref = this.$refs[refName];
+          const ref = this.$refs[refName];
+          if (ref) {
             if (ref?.length) {
-                ref[0]?.hide();
+                ref?.[0]?.hide();
             } else {
                 ref?.hide();
             }
+          }
         },
-        async $_deletePreset(id, refName) {
+        async $_deletePreset(preset, refName) {
             this.presetLoader = true;
-            await this.deletePreset(id);
+            await this.deletePreset(preset);
             this.presetLoader = false;  
             this.$_closeModal(refName);
         },

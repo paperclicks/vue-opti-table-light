@@ -35,7 +35,6 @@
               :selectedPreset="selectedPreset"
               :deletePreset="deletePreset"
               :savePreset="savePreset"
-              :clonePreset="clonePreset"
               :changePreset="changePreset"
             />
           </template>
