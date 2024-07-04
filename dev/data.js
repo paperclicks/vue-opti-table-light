@@ -6266,7 +6266,7 @@ export default function () {
             },
           ],
     },
-    currentPreset: {
+    selectedPreset: {
         id: "6668379018f6683bea6bfe93",
         name: "Test 2",
         fields: [

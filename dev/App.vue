@@ -24,7 +24,7 @@
       :nativeFields="nativeFields"
       :hasPresets="true"
       :presetList="presetList"
-      :selectedPreset="currentPreset"
+      :selectedPreset="selectedPreset"
       :totals="table.totals"
       :exportCsvItems="$_csvFetchData"
       :column-filter-enable="true"
@@ -92,7 +92,7 @@ export default {
       }
     },
     $c_tableFields() {
-      return this.currentPreset.fields;
+      return this.selectedPreset.fields;
     },
   },
   methods: {
@@ -112,7 +112,7 @@ export default {
     $_changePreset(preset) {
       const foundPreset = this.presetList.user_presets.find((p) => p.id === preset.id);
       this.table.fields = foundPreset.fields;
-      this.currentPreset = foundPreset;
+      this.selectedPreset = foundPreset;
     },
     $_loadData({ page, limit, sortField, sortType, search, searchableFields }) {
       if (this.serverSidePagination) {

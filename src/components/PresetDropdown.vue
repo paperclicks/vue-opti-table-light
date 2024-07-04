@@ -56,7 +56,7 @@
                         <p :id="`user-fields-${i}`" class="preset-name">
                             {{ sliceText(preset.name, 25) }}
                         </p>
-                        <button class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
+                        <button :disabled="$c_atLeastOneUserPreset" class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
@@ -157,7 +157,7 @@
                 </button>
             </div>
         </b-dropdown-form>
-        <b-dropdown-item-button v-if="showAllAdminPresets || showAllUserPresets" @click="createPreset" class="column-settings-btn">
+        <b-dropdown-item-button v-if="showAllAdminPresets || showAllUserPresets" @click="createNewPreset" class="column-settings-btn">
             Create new preset
         </b-dropdown-item-button>
         <b-dropdown-item-button v-else class="column-settings-btn" @click="openSettings">
@@ -217,6 +217,9 @@ export default {
         $c_isAdminPreset() {
           return this.selectedPreset?.isAdmin;
         },
+        $c_atLeastOneUserPreset() {
+            return this.localPresetList?.user_presets?.length === 1;
+        },
     },
     watch: {
         selectedPreset: {
@@ -272,6 +275,9 @@ export default {
             this.openColumnSettings();
           }
         },
+        createNewPreset() {
+          this.createPreset(this.localSelectedPreset);
+        }
     }
 }
 </script>
@@ -454,6 +460,7 @@ export default {
   .popover-body {
     max-height: 300px;
     overflow-y: auto;
+    margin: 1rem 0 1rem 0;
   }
 }
 /*.columns-dropdown {
