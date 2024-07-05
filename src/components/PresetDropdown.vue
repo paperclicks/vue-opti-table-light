@@ -22,7 +22,7 @@
                 <i v-show="saveSettingsLoading" class="fa fa-spinner fa-spin" aria-hidden="true"
                 title="Saving..."></i>
                 <p class="toggle-text">
-                    Columns
+                    Columns: {{ sliceText(localSelectedPreset, 12) }}
                 </p>
             </span>
             <svg width="14" height="8" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,14 @@
                         <b-modal hide-footer hide-header content-class="delete-preset-content"
                             modal-class="optimizer-modal" :id="`modal-${i}`" :ref="`modal-${i}`" centered
                             no-close-on-backdrop>
-                            <h5>Delete this column preset?</h5>
+                            <div class="delete-preset-header">
+                              <h5>Delete this column preset?</h5>
+                              <button @click="() => $_closeModal(`modal-${i}`)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 304 384">
+                                  <path fill="currentColor" d="M299 73L179 192l120 119l-30 30l-120-119L30 341L0 311l119-119L0 73l30-30l119 119L269 43z"/>
+                                </svg>
+                              </button>
+                            </div>
                             <p>This column preset and its custom selections will be deleted on all entity levels if you continue.</p>
                             <span>
                               <button :disabled="presetLoader"
@@ -336,16 +343,6 @@ export default {
             align-items: center;
             justify-content: space-between;
           }
-          .delete-preset-btn {
-            background-color: transparent;
-            border: none;
-            margin-right: -20px;
-
-            &:disabled {
-              cursor: not-allowed;
-              opacity: 0.5;
-            }
-          }
         }
         .custom-control {
           padding: 0;
@@ -353,6 +350,17 @@ export default {
         }
         .custom-radio {
           padding: 10px 28px;
+          .delete-preset-btn {
+            background-color: transparent;
+            border: none;
+            margin-right: -20px;
+            opacity: 0;
+
+            &:disabled {
+              cursor: not-allowed;
+              opacity: 0.5;
+            }
+          }
 
           &:has(input:checked) {
             background-color: #F2F2FA;
@@ -361,6 +369,9 @@ export default {
           &:hover { 
             background-color: #F2F3F5;
             border-radius: 5px;
+            .delete-preset-btn {
+              opacity: 1;
+            }
           }
 
           .custom-control-input:checked,
@@ -419,6 +430,16 @@ export default {
     }
   }
   .delete-preset-content {
+    .delete-preset-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      button {
+        background-color: transparent;
+        border: none;
+        margin-top: -.3rem;
+      }
+    }
     .modal-body {
       h5 {
         white-space: nowrap;
@@ -427,6 +448,7 @@ export default {
 
       p {
         font-size: 14px;
+        margin: 1rem;
         color: #636364;
       }
   
@@ -457,10 +479,17 @@ export default {
     }
 }
 .preset-info {
+  overflow: hidden;
+  .popover-header {
+    background-color: white;
+    border: none;
+  }
   .popover-body {
+    ul {
+      margin: 0;
+    }
     max-height: 300px;
     overflow-y: auto;
-    margin: 1rem 0 1rem 0;
   }
 }
 /*.columns-dropdown {
