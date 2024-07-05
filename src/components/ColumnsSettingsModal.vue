@@ -52,8 +52,8 @@
       <div v-if="hasGroups" class="col-3 items-col items-col-visibility groups">
         <h6>Groups</h6>
         <b-nav v-if="hasGroups" class="groups-container" pills v-b-scrollspy:nav-scroller>
-          <b-nav-item v-for="(group, index) in $c_nativeFields" @click="scrollIntoView" :href="`#${group.group}`"
-            :key="index">
+          <b-nav-item v-for="(group, index) in $c_nativeFields" @click="() => scrollIntoView(group.group)" :href="`#${group.group}`"
+            :key="index" :id="`link-${group.group}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="none">
               <g clip-path="url(#clip0_14057_103242)">
                 <path d="M11.9998 6.66797L8.6665 6.66797" stroke="#262626" stroke-linecap="round" />
@@ -328,9 +328,11 @@
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
         <button v-if="!presetEnabled" class="btn btn-primary" @click="$_saveSettings">
           Save
+          <b-spinner variant="light" class="ml-2" v-if="savePresetLoader" small label="Spinning"></b-spinner>
         </button>
         <button v-else class="btn btn-primary" @click="$_savePreset" :disabled="$c_disableSaveButton">
           Save as preset
+          <b-spinner variant="light" class="ml-2" v-if="savePresetLoader" small label="Spinning"></b-spinner>
         </button>
       </div>
     </template>
@@ -387,6 +389,7 @@ export default {
       editMode: false,
       editPresetLoader: false,
       editedPresetName: this.selectedPreset?.name || '',
+      savePresetLoader: false,
     };
   },
   computed: {
@@ -493,8 +496,10 @@ export default {
         return groupedVisibilityColumns;
     },
     $_saveSettings() {
+      this.savePresetLoader = true;
       this.$emit('save', this.model);
       this.$emit('input', this.model);
+      this.presetEnabled = false;
       this.hide();
     },
     $_loadFromModel() {
@@ -516,12 +521,10 @@ export default {
         console.log(err);
       }
     },
-    scrollIntoView(event) {
-      event.preventDefault()
-      const href = event.target.getAttribute('href')
-      const el = href ? document.querySelector(href) : null
+    scrollIntoView(group) {
+      const el = group ? document.querySelector(`#${group}`) : null
       if (el) {
-        this.$refs.content.scrollTop = el.offsetTop
+        this.$refs.content.scrollTop = el.offsetTop;
       }
     },
     async $_updateCustomMetric(metric) {
@@ -572,6 +575,7 @@ export default {
       this.updateComparisonColumns(col, checked);
     },
     async $_savePreset() {
+      this.savePresetLoader = true;
       const preset = {
         name: this.newPresetName,
       };
@@ -579,6 +583,7 @@ export default {
       this.$emit('input', this.model);
       this.presetEnabled = false;
       this.newPresetName = '';
+      this.savePresetLoader = false;
       this.hide();
     },
     $_disableBasedOnFormat(col) {
