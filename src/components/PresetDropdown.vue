@@ -22,7 +22,7 @@
                 <i v-show="saveSettingsLoading" class="fa fa-spinner fa-spin" aria-hidden="true"
                 title="Saving..."></i>
                 <p class="toggle-text">
-                    Columns: {{ sliceText(localSelectedPreset, 12) }}
+                    Columns
                 </p>
             </span>
             <svg width="14" height="8" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
