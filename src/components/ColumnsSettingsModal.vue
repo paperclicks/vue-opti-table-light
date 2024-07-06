@@ -328,11 +328,9 @@
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
         <button v-if="!presetEnabled" class="btn btn-primary" @click="$_saveSettings">
           Save
-          <b-spinner variant="light" class="ml-2" v-if="savePresetLoader" small label="Spinning"></b-spinner>
         </button>
         <button v-else class="btn btn-primary" @click="$_savePreset" :disabled="$c_disableSaveButton">
           Save as preset
-          <b-spinner variant="light" class="ml-2" v-if="savePresetLoader" small label="Spinning"></b-spinner>
         </button>
       </div>
     </template>
@@ -389,7 +387,6 @@ export default {
       editMode: false,
       editPresetLoader: false,
       editedPresetName: this.selectedPreset?.name || '',
-      savePresetLoader: false,
     };
   },
   computed: {
@@ -496,7 +493,6 @@ export default {
         return groupedVisibilityColumns;
     },
     $_saveSettings() {
-      this.savePresetLoader = true;
       this.$emit('save', this.model);
       this.$emit('input', this.model);
       this.presetEnabled = false;
@@ -575,7 +571,6 @@ export default {
       this.updateComparisonColumns(col, checked);
     },
     async $_savePreset() {
-      this.savePresetLoader = true;
       const preset = {
         name: this.newPresetName,
       };
@@ -583,7 +578,6 @@ export default {
       this.$emit('input', this.model);
       this.presetEnabled = false;
       this.newPresetName = '';
-      this.savePresetLoader = false;
       this.hide();
     },
     $_disableBasedOnFormat(col) {
