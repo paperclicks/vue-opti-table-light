@@ -1,7 +1,7 @@
 <template>
     <b-dropdown ref="presetDropdown" right no-caret id="preset-dropdown">
         <template #button-content>
-            <span class="d-flex align-items-center">
+            <span id="popover-preset-name" class="d-flex align-items-center">
                 <svg v-show="!saveSettingsLoading" width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M4 1.30078C4.62126 1.30078 4.93188 1.30078 5.17691 1.40228C5.50362 1.5376 5.76318 1.79717 5.89851 2.12387C6 2.3689 6 2.67953 6 3.30078L6 12.6341C6 13.2554 6 13.566 5.89851 13.811C5.76318 14.1377 5.50361 14.3973 5.17691 14.5326C4.93188 14.6341 4.62125 14.6341 4 14.6341C3.37874 14.6341 3.06812 14.6341 2.82309 14.5326C2.49638 14.3973 2.23682 14.1377 2.10149 13.811C2 13.566 2 13.2554 2 12.6341L2 3.30078C2 2.67953 2 2.3689 2.10149 2.12387C2.23682 1.79717 2.49638 1.5376 2.82309 1.40228C3.06812 1.30078 3.37874 1.30078 4 1.30078Z"
@@ -24,11 +24,14 @@
                 <p class="toggle-text">
                     Columns
                 </p>
-            </span>
-            <svg width="14" height="8" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              </span>
+              <b-popover custom-class="preset-name" boundary="window" target="popover-preset-name" triggers="hover" placement="top">
+                <p>Columns: {{ localSelectedPreset }}</p>
+              </b-popover>
+              <svg width="14" height="8" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.6668 1L6.00016 5L1.3335 1" stroke="#5F6870" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
+                stroke-linejoin="round" />
+              </svg>
         </template>
         <b-dropdown-form class="preset-wrapper">
             <div v-if="$c_hasUserPresets && !showAllAdminPresets">
@@ -86,8 +89,10 @@
                         <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`user-fields-${i}`" triggers="hover" placement="right">
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
-                          <ul v-for="(field, i) in preset.fields" :key="i">
-                            <li v-if="field.display">{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                          <ul>
+                            <li v-for="(field, i) in preset.fields.filter(f => f.display)" :key="i">
+                              {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
+                            </li>
                           </ul>
                         </b-popover>
                     </b-form-radio>
@@ -146,8 +151,10 @@
                         <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`description-${index}`" triggers="hover" placement="right">
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
-                          <ul v-for="(field, i) in preset.fields" :key="i">
-                            <li>{{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}</li>
+                          <ul>
+                            <li v-for="(field, i) in preset.fields" :key="i">
+                                {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
+                            </li>
                           </ul>
                         </b-popover>
                     </b-form-radio>
@@ -492,36 +499,13 @@ export default {
     overflow-y: auto;
   }
 }
-/*.columns-dropdown {
-    .dropdown-menu {
-      min-width: 13.5rem;
-      max-height: 400px;
-      overflow-y: scroll;
-      padding: 0;
-      .dropdown-header {
-        color: #151b1e;
-        background-color: #FFF;
-        padding: 5px 10px;
-        label.custom-checkbox {
-          margin-bottom: 0;
-          .custom-control-description {
-            line-height: 20px;
-          }
-        }
-      }
-      label.custom-control {
-        margin-bottom: 0;
-      }
-      label > span.custom-control-description {
-        cursor: move;
-      }
-      .list-group-item {
-        padding: .5rem 1.25rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        cursor: move;
-      }
+.preset-name {
+  .popover-body {
+    margin: 1rem;
+    padding: 0;
+    p {
+      margin: 0 !important;
     }
-  }*/
+  }
+}
 </style>
