@@ -52,7 +52,7 @@
       <div v-if="hasGroups" class="col-3 items-col items-col-visibility groups">
         <h6>Groups</h6>
         <b-nav v-if="hasGroups" class="groups-container" pills v-b-scrollspy:nav-scroller>
-          <b-nav-item v-for="(group, index) in $c_nativeFields" @click="() => scrollIntoView(group.group)" :href="`#${group.group}`"
+          <b-nav-item v-for="(group, index) in $c_nativeFields" @click="(e) => scrollIntoView(e, group.group)" :href="`#${group.group}`"
             :key="index" :id="`link-${group.group}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="none">
               <g clip-path="url(#clip0_14057_103242)">
@@ -517,7 +517,8 @@ export default {
         console.log(err);
       }
     },
-    scrollIntoView(group) {
+    scrollIntoView(e, group) {
+      e.preventDefault();
       const el = group ? document.querySelector(`#${group}`) : null
       if (el) {
         this.$refs.content.scrollTop = el.offsetTop;
