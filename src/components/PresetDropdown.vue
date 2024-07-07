@@ -297,146 +297,146 @@ export default {
 </script>
 
 <style lang="scss">
-.dropdown-menu {
-    width: 320px;
-    padding: .5rem 0 .5rem .8rem;
-    transform: translate3d(-155px, 38px, 0px);
-
-    .preset-wrapper {
-      .b-dropdown-form {
-        padding: 0;
-
-        .preset-list {
-            max-height: 500px;
-            overflow-y: auto;
-            .preset-radio {
-              .custom-control-label {
-                &::after,
-                &::before {
-                  width: 20px !important;
-                  height: 20px !important;
+#preset-dropdown {
+  .dropdown-menu {
+      width: 320px;
+      padding: .5rem 0 .5rem .8rem;
+      transform: translate3d(-155px, 38px, 0px);
+  
+      .preset-wrapper {
+        .b-dropdown-form {
+          padding: 0;
+  
+          .preset-list {
+              max-height: 500px;
+              overflow-y: auto;
+              .preset-radio {
+                .custom-control-label {
+                  &::after,
+                  &::before {
+                    width: 20px !important;
+                    height: 20px !important;
+                  }
+                }
+                .preset-name {
+                  margin: 0;
+                  padding: 0;
                 }
               }
-              .preset-name {
-                margin: 0;
-                padding: 0;
+          }
+        }
+        
+        .dropdown-header {
+          padding: 0rem;
+          font-size: 13px;
+          text-transform: uppercase;
+          color: #ABABAB;
+          margin: 7px 0;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+  
+        .list-unstyled {
+          .user-preset-label {
+            .modal-header,
+            .modal-footer {
+              display: none;
+            }
+            .custom-control-label {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+          }
+          .custom-control {
+            padding: 0;
+            margin-bottom: 7px;
+          }
+          .custom-radio {
+            padding: 10px 28px;
+            .delete-preset-btn {
+              background-color: transparent;
+              border: none;
+              margin-right: -20px;
+              opacity: 0;
+  
+              &:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
               }
             }
-        }
-
-        
-      }
-      
-      .dropdown-header {
-        padding: 0rem;
-        font-size: 13px;
-        text-transform: uppercase;
-        color: #ABABAB;
-        margin: 7px 0;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .list-unstyled {
-        .user-preset-label {
-          .modal-header,
-          .modal-footer {
-            display: none;
-          }
-          .custom-control-label {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-        }
-        .custom-control {
-          padding: 0;
-          margin-bottom: 7px;
-        }
-        .custom-radio {
-          padding: 10px 28px;
-          .delete-preset-btn {
-            background-color: transparent;
-            border: none;
-            margin-right: -20px;
-            opacity: 0;
-
-            &:disabled {
-              cursor: not-allowed;
-              opacity: 0.5;
+  
+            &:has(input:checked) {
+              background-color: #F2F2FA;
+              border-radius: 5px;
             }
-          }
-
-          &:has(input:checked) {
-            background-color: #F2F2FA;
-            border-radius: 5px;
-          }
-          &:hover { 
-            background-color: #F2F3F5;
-            border-radius: 5px;
-            .delete-preset-btn {
-              opacity: 1;
+            &:hover { 
+              background-color: #F2F3F5;
+              border-radius: 5px;
+              .delete-preset-btn {
+                opacity: 1;
+              }
             }
-          }
-
-          .custom-control-input:checked,
-          .custom-control-input:checked ~ .custom-control-label::before {
-            background-color: #4158D0 !important;
-            border-color: #4158D0 !important;
-          }
-
-          
-          .custom-control-label {
-            padding-left: 5px;
-
-            .preset-description {
-              font-size: 13px;
-              color: #ABABAB;
+  
+            .custom-control-input:checked,
+            .custom-control-input:checked ~ .custom-control-label::before {
+              background-color: #4158D0 !important;
+              border-color: #4158D0 !important;
             }
-
-            &::after,
-            &::before {
-              width: 15px;
-              height: 15px;
+  
+            
+            .custom-control-label {
+              padding-left: 5px;
+  
+              .preset-description {
+                font-size: 13px;
+                color: #ABABAB;
+              }
+  
+              &::after,
+              &::before {
+                width: 15px;
+                height: 15px;
+              }
             }
           }
         }
       }
-    }
-    button[type = "button"] {
-      color: #4158D0;
-      border: 1.4px solid #4158D0;
-      padding: 3px 2px;
-      border-radius: 8px;
-      text-align: center;
-      margin-bottom: 5px;
-
-      &:hover {
-        background-color: white;
-      }
-    }
-    .view-more-btn {
-        background-color: transparent;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin: 1rem 0rem;
-        padding: 0 1rem;
+      button[type = "button"] {
         color: #4158D0;
-        font-size: 15px;
-    }
-    .dropdown-back-btn {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-        margin: 0;
-    }
+        border: 1.4px solid #4158D0;
+        padding: 3px 2px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 5px;
+  
+        &:hover {
+          background-color: white;
+        }
+      }
+      .view-more-btn {
+          background-color: transparent;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin: 1rem 0rem;
+          padding: 0 1rem;
+          color: #4158D0;
+          font-size: 15px;
+      }
+      .dropdown-back-btn {
+          background-color: transparent;
+          border: none;
+          padding: 0;
+          margin: 0;
+      }
   }
-  .delete-preset-content {
+}
+.delete-preset-content {
     .delete-preset-header {
       display: flex;
       align-items: flex-start;
