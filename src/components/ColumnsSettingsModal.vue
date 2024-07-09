@@ -453,7 +453,7 @@ export default {
       return this.hasGroups ? 20 : 40;
     },
     $c_showEditIcon() {
-      return !this.selectedPreset?.isAdmin;
+      return !this.selectedPreset?.suggestedPreset;
     },
   },
   created() {

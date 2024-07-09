@@ -34,7 +34,7 @@
               </svg>
         </template>
         <b-dropdown-form class="preset-wrapper">
-            <div v-if="$c_hasUserPresets && !showAllAdminPresets">
+            <div v-if="$c_hasUserPresets && !showAllSuggestedPresets">
                 <b-dropdown-header>
                     <button
                         v-show="showAllUserPresets"
@@ -109,12 +109,12 @@
                 </button>
                 <b-dropdown-divider v-if="!showAllUserPresets"></b-dropdown-divider>
             </div>
-            <div v-if="$c_hasAdminPresets && !showAllUserPresets">
+            <div v-if="$c_hasSuggestedPresets && !showAllUserPresets">
                 <b-dropdown-header>
                     <button
                         class="dropdown-back-btn"
-                        v-show="showAllAdminPresets" 
-                        @click.prevent="() => $_setShowAllAdminPresets(false)"
+                        v-show="showAllSuggestedPresets" 
+                        @click.prevent="() => $_setShowAllSuggestedPresets(false)"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
                             <path fill="currentColor" d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1H6.921Z"/>
@@ -126,7 +126,7 @@
                     <b-form-radio 
                         class="preset-radio" 
                         v-model="localSelectedPreset"
-                        v-for="(preset, index) in $c_adminPresetsList" 
+                        v-for="(preset, index) in $c_suggestedPresetsList" 
                         :key="preset.id"
                         :value="preset.name"
                         @change="() => $_changePreset(preset)"
@@ -161,8 +161,8 @@
                 </b-dropdown-group>
                 <button
                     class="view-more-btn"
-                    v-show="!showAllAdminPresets" 
-                    @click.prevent="() => $_setShowAllAdminPresets(true)"
+                    v-show="!showAllSuggestedPresets" 
+                    @click.prevent="() => $_setShowAllSuggestedPresets(true)"
                 >
                     View Optimizer's custom columns
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
@@ -171,7 +171,7 @@
                 </button>
             </div>
         </b-dropdown-form>
-        <b-dropdown-item-button v-if="showAllAdminPresets || showAllUserPresets" @click="createNewPreset" class="column-settings-btn">
+        <b-dropdown-item-button v-if="showAllSuggestedPresets || showAllUserPresets" @click="createNewPreset" class="column-settings-btn">
             Create new preset
         </b-dropdown-item-button>
         <b-dropdown-item-button v-else class="column-settings-btn" @click="openSettings">
@@ -185,7 +185,6 @@ export default {
     name: 'PresetDropdown',
     props: {
         sliceText: { type: Function, default: () => [] },
-        hasAdminPresets: { type: Boolean },
         hasUserPresets: { type: Boolean },
         presetList: { type: Object },
         openColumnSettings: { type: Function, default: () => [] },
@@ -199,7 +198,7 @@ export default {
     data() {
         return {
             showAllUserPresets: false,
-            showAllAdminPresets: false,
+            showAllSuggestedPresets: false,
             presetLoader: false,
             localSelectedPreset: this.selectedPreset.name,
             newPresetName: "",
@@ -213,11 +212,11 @@ export default {
             }
             return this.localPresetList.user_presets.slice(0, 3);
         },
-        $c_adminPresetsList() {
-            if (this.showAllAdminPresets) {
-                return this.localPresetList.admin_presets;
+        $c_suggestedPresetsList() {
+            if (this.showAllSuggestedPresets) {
+                return this.localPresetList.suggested_presets;
             }
-            return this.localPresetList.admin_presets.slice(0, 2);
+            return this.localPresetList.suggested_presets.slice(0, 2);
         },
         $c_disableSavePresetButton() {
             return !this.newPresetName.length;
@@ -225,11 +224,11 @@ export default {
         $c_hasUserPresets() {
             return this.localPresetList?.user_presets?.length > 0;
         },
-        $c_hasAdminPresets() {
-            return this.localPresetList?.admin_presets?.length > 0;
+        $c_hasSuggestedPresets() {
+            return this.localPresetList?.suggested_presets?.length > 0;
         },
-        $c_isAdminPreset() {
-          return this.selectedPreset?.isAdmin;
+        $c_isSuggestedPreset() {
+          return this.selectedPreset?.suggestedPreset;
         },
         $c_atLeastOneUserPreset() {
             return this.localPresetList?.user_presets?.length === 1;
@@ -253,8 +252,8 @@ export default {
         $_setShowAllUserPresets(value) {
             this.showAllUserPresets = value;
         },
-        $_setShowAllAdminPresets(value) {
-            this.showAllAdminPresets = value;
+        $_setShowAllSuggestedPresets(value) {
+            this.showAllSuggestedPresets = value;
         },
         async $_closeModal(refName) {
           const ref = this.$refs[refName];
@@ -283,7 +282,7 @@ export default {
             this.$refs.presetDropdown.hide(true);
         },
         openSettings() {
-          if (this.$c_isAdminPreset) {
+          if (this.$c_isSuggestedPreset) {
             this.createPreset(this.localSelectedPreset);
           } else {
             this.openColumnSettings();
