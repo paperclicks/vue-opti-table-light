@@ -85,7 +85,7 @@ export default {
   },
   $c_allPresets() {
     if (this.presetList) {
-      return [...this.presetList?.user_presets, ...this.presetList?.admin_presets];
+      return [...this.presetList?.user_presets, ...this.presetList?.suggested_presets];
     }
     return [];
   },
