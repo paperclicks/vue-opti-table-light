@@ -319,10 +319,11 @@
     <template #modal-footer>
       <div class="preset-name" v-if="hasPresets">
         <span>
-          <b-form-checkbox v-model="presetEnabled" />
+          <b-form-checkbox v-model="presetEnabled" @change="$_addDefaultPresetName" />
           <p>Save as a column preset</p>
         </span>
-        <b-form-input v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
+        <b-form-input v-show="!liveEdit" @blur="$_inputBlur" class="input-preset-name" autofocus v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
+        <a @click="$_disableLiveEdit" v-show="liveEdit">{{ newPresetName }}</a>
       </div>
       <div>
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
@@ -387,6 +388,7 @@ export default {
       editMode: false,
       editPresetLoader: false,
       editedPresetName: this.selectedPreset?.name || '',
+      liveEdit: false,
     };
   },
   computed: {
@@ -617,6 +619,18 @@ export default {
       this.editedPresetName = '';
       this.editMode = false;
       this.editPresetLoader = false;
+    },
+    $_addDefaultPresetName(checked) {
+      if (checked) {
+        this.liveEdit = false;
+        this.newPresetName = `${this.selectedPreset.name} (Copy)`;
+      }
+    },
+    $_inputBlur() {
+      this.liveEdit = true;
+    },
+    $_disableLiveEdit() {
+      this.liveEdit = false;
     }
   },
 };
@@ -632,6 +646,12 @@ export default {
       display: flex;
       align-items: baseline;
       gap: .5rem;
+      a {
+        color: #4158D0;
+        text-decoration:underline;
+        text-decoration-style: dotted;
+        cursor: pointer;
+      }
       span {
         display: flex;
         p {
