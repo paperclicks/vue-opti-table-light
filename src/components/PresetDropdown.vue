@@ -35,17 +35,9 @@
         </template>
         <b-dropdown-form class="preset-wrapper">
             <div v-if="$c_hasUserPresets && !showAllSuggestedPresets">
+              <div class="preset-list-container">
                 <b-dropdown-header>
-                    <button
-                        v-show="showAllUserPresets"
-                        class="dropdown-back-btn"
-                        @click.prevent="() => $_setShowAllUserPresets(false)"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1H6.921Z"/>
-                        </svg>
-                    </button>
-                    Your custom presets
+                    Your custom columns
                 </b-dropdown-header>
                 <b-dropdown-group class="preset-list" @submit.stop.prevent>
                     <b-form-radio
@@ -97,30 +89,32 @@
                         </b-popover>
                     </b-form-radio>
                 </b-dropdown-group>
+              </div>
                 <button
-                    class="view-more-btn"
-                    v-show="!showAllUserPresets" 
-                    @click.prevent="() => $_setShowAllUserPresets(true)"
-                >
-                    View your custom columns
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887q.375-.375.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75q0 .375-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1q-.375-.375-.375-.888t.375-.887L14.475 12Z"/>
-                    </svg>
-                </button>
-                <b-dropdown-divider v-if="!showAllUserPresets"></b-dropdown-divider>
-            </div>
+                      v-show="showAllUserPresets"
+                      class="view-more-btn back-btn"
+                      @click.prevent="() => $_setShowAllUserPresets(false)"
+                  >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                          <path fill="currentColor" d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1H6.921Z"/>
+                      </svg>
+                      Back to all columns
+                  </button>
+                  <button
+                      class="view-more-btn"
+                      v-show="!showAllUserPresets" 
+                      @click.prevent="() => $_setShowAllUserPresets(true)"
+                  >
+                      All your custom columns
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                          <path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887q.375-.375.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75q0 .375-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1q-.375-.375-.375-.888t.375-.887L14.475 12Z"/>
+                      </svg>
+                  </button>
+              </div>
             <div v-if="$c_hasSuggestedPresets && !showAllUserPresets">
+              <div class="preset-list-container">
                 <b-dropdown-header>
-                    <button
-                        class="dropdown-back-btn"
-                        v-show="showAllSuggestedPresets" 
-                        @click.prevent="() => $_setShowAllSuggestedPresets(false)"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1H6.921Z"/>
-                        </svg>
-                    </button>
-                    Suggested presets
+                    Suggested columns
                 </b-dropdown-header>
                 <b-dropdown-group class="preset-list" @submit.stop.prevent>
                     <b-form-radio 
@@ -159,23 +153,31 @@
                         </b-popover>
                     </b-form-radio>
                 </b-dropdown-group>
+              </div>
+                <button
+                      v-show="showAllSuggestedPresets"
+                      class="view-more-btn back-btn"
+                      @click.prevent="() => $_setShowAllSuggestedPresets(false)"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1H6.921Z"/>
+                    </svg>
+                    Back to all columns
+                </button>
                 <button
                     class="view-more-btn"
                     v-show="!showAllSuggestedPresets" 
                     @click.prevent="() => $_setShowAllSuggestedPresets(true)"
                 >
-                    View Optimizer's custom columns
+                    Suggested custom columns
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                         <path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887q.375-.375.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75q0 .375-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1q-.375-.375-.375-.888t.375-.887L14.475 12Z"/>
                     </svg>
                 </button>
             </div>
         </b-dropdown-form>
-        <b-dropdown-item-button v-if="showAllSuggestedPresets || showAllUserPresets" @click="createNewPreset" class="column-settings-btn">
-            Create new preset
-        </b-dropdown-item-button>
-        <b-dropdown-item-button v-else class="column-settings-btn" @click="openSettings">
-            Column Settings
+        <b-dropdown-item-button v-if="!showAllUserPresets && !showAllSuggestedPresets" class="column-settings-btn" @click="openSettings">
+          Column Settings
         </b-dropdown-item-button>
     </b-dropdown>
 </template>
@@ -216,7 +218,7 @@ export default {
             if (this.showAllSuggestedPresets) {
                 return this.localPresetList.suggested_presets;
             }
-            return this.localPresetList.suggested_presets.slice(0, 2);
+            return this.localPresetList.suggested_presets.slice(0, 3);
         },
         $c_disableSavePresetButton() {
             return !this.newPresetName.length;
@@ -297,32 +299,49 @@ export default {
 
 <style lang="scss">
 #preset-dropdown {
+  .column-settings-btn {
+    border: 1.4px solid #4158D0;
+    padding: 3px 2px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 10px 8px;
+    .dropdown-item {
+      color: #4158D0;
+      &:hover {
+        background-color: white;
+      }
+    }
+  }
   .dropdown-menu {
       width: 320px;
-      padding: .5rem 0 .5rem .8rem;
       transform: translate3d(-155px, 38px, 0px);
+      padding-bottom: 0;
   
       .preset-wrapper {
         .b-dropdown-form {
           padding: 0;
-  
-          .preset-list {
-              max-height: 500px;
-              overflow-y: auto;
-              .preset-radio {
-                .custom-control-label {
-                  &::after,
-                  &::before {
-                    width: 20px !important;
-                    height: 20px !important;
+
+          .preset-list-container {
+            padding: 0 .5rem;
+            .preset-list {
+                max-height: 500px;
+                overflow-y: auto;
+                .preset-radio {
+                  .custom-control-label {
+                    &::after,
+                    &::before {
+                      width: 20px !important;
+                      height: 20px !important;
+                    }
+                  }
+                  .preset-name {
+                    margin: 0;
+                    padding: 0;
                   }
                 }
-                .preset-name {
-                  margin: 0;
-                  padding: 0;
-                }
-              }
+            }
           }
+  
         }
         
         .dropdown-header {
@@ -403,18 +422,6 @@ export default {
           }
         }
       }
-      button[type = "button"] {
-        color: #4158D0;
-        border: 1.4px solid #4158D0;
-        padding: 3px 2px;
-        border-radius: 8px;
-        text-align: center;
-        margin-bottom: 5px;
-  
-        &:hover {
-          background-color: white;
-        }
-      }
       .view-more-btn {
           background-color: transparent;
           border: none;
@@ -422,16 +429,25 @@ export default {
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          margin: 1rem 0rem;
-          padding: 0 1rem;
+          padding: 12px 16px;
           color: #4158D0;
           font-size: 15px;
+          border: 1px solid #E8E8E9;
+          &.back-btn {
+            justify-content: flex-start;
+            gap: 6px;
+          }
       }
       .dropdown-back-btn {
           background-color: transparent;
           border: none;
           padding: 0;
-          margin: 0;
+          margin: 0 .5rem 0 0;
+
+          &:hover {
+            background-color: #F2F3F5;
+            border-radius: 6px;
+          }
       }
   }
 }
