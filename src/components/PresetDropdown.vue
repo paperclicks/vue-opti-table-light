@@ -212,13 +212,13 @@ export default {
             if (this.showAllUserPresets) {
                 return this.localPresetList.user_presets;
             }
-            return this.localPresetList.user_presets.slice(0, 3);
+            return this.localPresetList.user_presets.slice(0, 2);
         },
         $c_suggestedPresetsList() {
             if (this.showAllSuggestedPresets) {
                 return this.localPresetList.suggested_presets;
             }
-            return this.localPresetList.suggested_presets.slice(0, 3);
+            return this.localPresetList.suggested_presets.slice(0, 2);
         },
         $c_disableSavePresetButton() {
             return !this.newPresetName.length;
