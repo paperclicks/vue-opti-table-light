@@ -322,8 +322,8 @@
           <b-form-checkbox v-model="presetEnabled" @change="$_addDefaultPresetName" />
           <p>Save as a column preset</p>
         </span>
-        <b-form-input v-show="!liveEdit" @blur="$_inputBlur" class="input-preset-name" autofocus v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
-        <a @click="$_disableLiveEdit" v-show="liveEdit">{{ newPresetName }}</a>
+        <b-form-input v-show="!liveEdit && presetEnabled" @blur="$_inputBlur" class="input-preset-name" autofocus v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
+        <a @click="$_disableLiveEdit" v-show="liveEdit && presetEnabled">{{ newPresetName }}</a>
       </div>
       <div>
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
