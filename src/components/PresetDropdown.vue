@@ -37,7 +37,7 @@
             <div v-if="$c_hasUserPresets && !showAllSuggestedPresets">
               <div class="preset-list-container">
                 <b-dropdown-header>
-                    Your custom columns
+                    Saved columns
                 </b-dropdown-header>
                 <b-dropdown-group class="preset-list" @submit.stop.prevent>
                     <b-form-radio
@@ -105,7 +105,7 @@
                       v-show="!showAllUserPresets" 
                       @click.prevent="() => $_setShowAllUserPresets(true)"
                   >
-                      All your custom columns
+                      View All
                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                           <path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887q.375-.375.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75q0 .375-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1q-.375-.375-.375-.888t.375-.887L14.475 12Z"/>
                       </svg>
@@ -129,7 +129,7 @@
                             <p class="preset-name">
                                 {{ sliceText(preset.name, 25) }}
                             </p>
-                            <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="none">
+                            <svg class="info-icon ml-2" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16" fill="none">
                                 <g clip-path="url(#clip0_14164_25327)">
                                   <circle cx="7.99967" cy="7.9987" r="6.66667" stroke="#BBBBBD"/>
                                   <path d="M8 11.332V7.33203" stroke="#BBBBBD" stroke-linecap="round"/>
@@ -169,7 +169,7 @@
                     v-show="!showAllSuggestedPresets" 
                     @click.prevent="() => $_setShowAllSuggestedPresets(true)"
                 >
-                    Suggested custom columns
+                    View All
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                         <path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887q.375-.375.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75q0 .375-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1q-.375-.375-.375-.888t.375-.887L14.475 12Z"/>
                     </svg>
@@ -268,20 +268,20 @@ export default {
           }
         },
         async $_deletePreset(preset, refName) {
-            this.presetLoader = true;
-            await this.deletePreset(preset);
-            this.presetLoader = false;  
-            this.$_closeModal(refName);
+          this.presetLoader = true;
+          await this.deletePreset(preset);
+          this.presetLoader = false;  
+          this.$_closeModal(refName);
         },
         async $_savePreset(preset, refName) {
-            this.presetLoader = true;
-            await this.savePreset(preset)
-            this.presetLoader = false;
-            this.$_closeModal(refName);
+          this.presetLoader = true;
+          await this.savePreset(preset)
+          this.presetLoader = false;
+          this.$_closeModal(refName);
         },
         async $_changePreset(preset) {
-            this.changePreset(preset);
-            this.$refs.presetDropdown.hide(true);
+          this.changePreset(preset);
+          this.$refs.presetDropdown.hide(true);
         },
         openSettings() {
           if (this.$c_isSuggestedPreset) {
