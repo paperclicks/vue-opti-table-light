@@ -631,7 +631,7 @@ export default {
     },
     $_inputBlur() {
       this.liveEdit = true;
-      if (this.$c_isSuggestedPreset && !this.newPresetName) {
+      if (this.$c_isSuggestedPreset && !this.newPresetName.length) {
         this.newPresetName = `${this.selectedPreset.name} (Copy)`;
       }
     },
