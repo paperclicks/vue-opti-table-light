@@ -319,7 +319,7 @@
     <template #modal-footer>
       <div class="preset-name" v-if="hasPresets">
         <span>
-          <b-form-checkbox v-model="presetEnabled" @change="$_addDefaultPresetName" />
+          <b-form-checkbox :disabled="$c_isSuggestedPreset" v-model="presetEnabled" @change="$_addDefaultPresetName" />
           <p>Save as a column preset</p>
         </span>
         <b-form-input v-show="!liveEdit && presetEnabled" @blur="$_inputBlur" class="input-preset-name" autofocus v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
@@ -456,6 +456,9 @@ export default {
     },
     $c_showEditIcon() {
       return !this.selectedPreset?.suggestedPreset;
+    },
+    $c_isSuggestedPreset() {
+      return this.selectedPreset?.suggestedPreset;
     },
   },
   created() {
@@ -628,6 +631,9 @@ export default {
     },
     $_inputBlur() {
       this.liveEdit = true;
+      if (this.$c_isSuggestedPreset && !this.newPresetName) {
+        this.newPresetName = `${this.selectedPreset.name} (Copy)`;
+      }
     },
     $_disableLiveEdit() {
       this.liveEdit = false;
