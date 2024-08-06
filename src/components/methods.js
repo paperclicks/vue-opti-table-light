@@ -231,6 +231,7 @@ export default {
           key: item.item.key,
           sortable: item.item.sortable || true,
           type: item.item.type,
+          group: item.item?.group,
         },
         display: item.display
       };

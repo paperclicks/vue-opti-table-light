@@ -1,5 +1,5 @@
 <template>
-    <b-popover v-if="col.header.info" :ref="`tooltip-${col.item.key}`"
+    <b-popover :delay="200" v-if="col.header.info" :ref="`tooltip-${col.item.key}`"
         :target="`tooltip-${col.item.key}`" :custom-class="customClass" triggers="hover"
         :placement="placement" container="title">
         <template #title>{{ typeof col.header.content === 'function' ? col.header.content() : col.header.content }}
