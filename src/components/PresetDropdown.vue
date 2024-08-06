@@ -102,7 +102,7 @@
                   </button>
                   <button
                       class="view-more-btn"
-                      v-show="!showAllUserPresets" 
+                      v-show="$c_showViewMoreUserPresets" 
                       @click.prevent="() => $_setShowAllUserPresets(true)"
                   >
                       View All
@@ -166,7 +166,7 @@
                 </button>
                 <button
                     class="view-more-btn"
-                    v-show="!showAllSuggestedPresets" 
+                    v-show="$c_showViewMoreSuggestedPresets" 
                     @click.prevent="() => $_setShowAllSuggestedPresets(true)"
                 >
                     View All
@@ -234,6 +234,18 @@ export default {
         },
         $c_atLeastOneUserPreset() {
             return this.localPresetList?.user_presets?.length === 1;
+        },
+        $c_hasMoreThanTwoUserPresets() {
+            return this.localPresetList?.user_presets?.length > 2;
+        },
+        $c_hasMoreThanTwoSuggestedPresets() {
+            return this.localPresetList?.suggested_presets?.length > 2;
+        },
+        $c_showViewMoreUserPresets() {
+          return this.$c_hasMoreThanTwoUserPresets && !this.showAllUserPresets;
+        },
+        $c_showViewMoreSuggestedPresets() {
+          return this.$c_hasMoreThanTwoSuggestedPresets && !this.showAllSuggestedPresets;
         },
     },
     watch: {
