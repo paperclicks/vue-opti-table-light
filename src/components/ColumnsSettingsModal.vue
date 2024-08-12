@@ -2,6 +2,7 @@
   <b-modal :modal-class="[{ 'd-none': hideModal }, 'columns-settings-modal']" title-class="ml-auto" ref="columnSettings"
     v-model="modal" centered @ok="$_saveSettings" @hidden="$_loadFromModel" :size="$c_modalSize"
     title="Columns settings" ok-title="Apply" body-class="py-0"
+    no-close-on-backdrop
     :footer-class="hasPresets ? 'justify-content-between' : 'justify-content-end'">
     <template #modal-header>
       <span v-if="!hasPresets">
@@ -27,7 +28,14 @@
         </span>
       </span>
       <span v-else-if="editMode && hasPresets" class="preset-edit-name">
-        <b-form-input placeholder="Edit preset name" v-model="editedPresetName" size="xl" />
+        <i v-if="!validateNameBeforeClose" v-b-tooltip.hover title="You have unsaved changes, are you sure you want to close the tab?" style="color: #dc3749" class="fa fa-exclamation-circle" aria-hidden="true"></i>
+        <b-form-input
+          placeholder="Edit preset name" 
+          v-model="editedPresetName" 
+          size="xl"
+          @change="validateNameBeforeClose = true"
+          :class="!validateNameBeforeClose ? 'validate-name-input' : 'name-input'"
+        />
         <span v-if="!editPresetLoader" class="d-flex align-items-center">
           <button :disabled="$c_disableEditPresetButton" class="tick-btn" @click="$_editPresetName">
             <i class="fa fa-check" aria-hidden="true"></i>
@@ -389,6 +397,7 @@ export default {
       editPresetLoader: false,
       editedPresetName: this.selectedPreset?.name || '',
       liveEdit: false,
+      validateNameBeforeClose: true,
     };
   },
   computed: {
@@ -484,6 +493,11 @@ export default {
       this.modal = true;
     },
     hide() {
+      if (this.editMode) {
+        this.validateNameBeforeClose = false;
+        return;
+      }
+      this.validateNameBeforeClose = true;
       this.modal = false;
     },
     groupVisibilityColumns() {
@@ -607,6 +621,7 @@ export default {
       this.editMode = value;
     },
     async $_editPresetName() {
+      this.validateNameBeforeClose = true;
       this.editPresetLoader = true;
       const preset = {
         name: this.editedPresetName,
@@ -695,6 +710,12 @@ export default {
         display: flex;
         align-items: center;
         gap: .3rem;
+        .validate-name-input {
+          border-color: #dc3749;
+        }
+        .name-input {
+          border-color: #ced4da;
+        }
         .tick-btn {
           border-radius: 50%;
           border: 1.5px solid #eeeaff;
