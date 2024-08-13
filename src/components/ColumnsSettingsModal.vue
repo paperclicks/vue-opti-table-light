@@ -319,6 +319,12 @@
               </div>
             </draggable>
           </div>
+          <!-- subuser columns manage -->
+          <subuser-column-access 
+            v-if="showSubUserSettings"
+            :switchPresetAccess="switchPresetAccess"
+            :selectedPreset="selectedPreset"
+          />
         </div>
       </div>
     </div>
@@ -351,6 +357,7 @@ import CustomMetricModal from './CustomMetricModal.vue';
 import _ from 'lodash';
 import draggable from 'vuedraggable';
 import ColumnVisibility from './ColumnVisibility.vue';
+import SubuserColumnAccess from './SubUserColumnAccess.vue';
 
 export default {
   name: 'ColumnSettingsModal',
@@ -358,6 +365,7 @@ export default {
     CustomMetricModal,
     draggable,
     ColumnVisibility,
+    SubuserColumnAccess,
   },
   props: {
     value: { type: Array, default: () => [] },
@@ -374,6 +382,8 @@ export default {
     hasPresets: { type: Boolean, default: false },
     infoType: { type: String, default: 'tooltip' },
     editPreset: { type: Function, default: () => {} },
+    showSubUserSettings: { type: Boolean, default: false },
+    switchPresetAccess: { type: Function, default: () => {} },
   },
   data() {
     return {
@@ -743,8 +753,9 @@ export default {
       }
       .modal-body {
         .col-max {
-          max-height: 550px;
+          max-height: 430px;
           overflow-y: auto;
+          border: 1px solid #f0f2f4;
         }
         .items-col {
           &.items-col-visibility {
@@ -770,7 +781,6 @@ export default {
                 flex-direction: column;
                 flex-wrap: nowrap;
                 max-height: 600px;
-                height: 585px;
                 overflow-y: auto;
                 gap: .5rem;
                 .nav-item {
@@ -927,7 +937,7 @@ export default {
               }
             }
             .order-columns-header {
-              padding: 20px 6px 0rem 6px;
+              padding: 20px 6px 6px 6px;
               h6 {
                 font-size: 18px;
               }
@@ -943,7 +953,7 @@ export default {
               overflow-y: auto;
 
               .sortable-ghost {
-                border: 3px dotted #2987e6;
+                border: 3px dotted #2987e6 !important;
               }
 
               .sortable-item {
@@ -960,6 +970,9 @@ export default {
                   font-size: 14px;
                   padding: 0;
                   margin: 0;
+                  &::selection {
+                    background-color: transparent !important;
+                  }
                 }
               }
               span {

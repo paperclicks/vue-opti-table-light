@@ -1,6 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import { nativeFields, presetList, currentPreset } from '../../dev/data';
-
 export default {
   name: { type: String, required: true },
   selectable: { type: Boolean, default: false },
@@ -23,7 +20,6 @@ export default {
   defaultRows: { type: Number, default: 10 }, // Not dynamic, need full reload
   tableModel: null, // v-model
   rowKey: null,
-  // searchValue: { type: String, default: '' },
   serverSidePagination: { type: Boolean, default: false },  // Not dynamic
   loading: { type: Boolean, default: false },
   saveSettings: { type: [Function, null], default: null },
@@ -51,4 +47,6 @@ export default {
   infoType: { type: String, default: 'tooltip' },
   focusSelectedRows:{type: Boolean, default: false },
   showHeaderPopover: { type: Boolean, default: false },
+  showSubUserSettings: { type: Boolean, default: true },
+  switchPresetAccess: { type: Function, default: () => {} },
 };

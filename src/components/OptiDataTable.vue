@@ -316,6 +316,8 @@
       :savePreset="savePreset" 
       :hasPresets="hasPresets"
       :infoType="infoType"
+      :showSubUserSettings="showSubUserSettings"
+      :switchPresetAccess="switchPresetAccess"
       :selectedPreset="selectedPreset"
       :editPreset="editPreset"
     />
