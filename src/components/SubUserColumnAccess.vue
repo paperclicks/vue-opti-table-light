@@ -8,7 +8,7 @@
             <b-form-checkbox v-model="switchValue" @change="$_switchPresetAccess" name="check-button" switch />
             <p>
                 Set to Public 
-                <i v-b-tooltip.hover title="By setting this column preset to public, all subusers will gain access to it. However, subusers will only have read-only access to columns marked as public." class="fa fa-info-circle" aria-hidden="true"></i>
+                <i v-b-tooltip.hover title="By setting this column preset to public it will be visible to all subusers. However, subusers will only have read-only access to columns marked as public." class="fa fa-info-circle" aria-hidden="true"></i>
             </p> 
         </div>
     </div>

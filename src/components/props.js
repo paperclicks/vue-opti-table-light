@@ -47,6 +47,6 @@ export default {
   infoType: { type: String, default: 'tooltip' },
   focusSelectedRows:{type: Boolean, default: false },
   showHeaderPopover: { type: Boolean, default: false },
-  showSubUserSettings: { type: Boolean, default: true },
+  showSubUserSettings: { type: Boolean, default: false },
   switchPresetAccess: { type: Function, default: () => {} },
 };
