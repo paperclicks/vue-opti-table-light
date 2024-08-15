@@ -324,6 +324,7 @@
             v-if="showSubUserSettings"
             :switchPresetAccess="switchPresetAccess"
             :selectedPreset="selectedPreset"
+            :presetEnabled="presetEnabled"
           />
         </div>
       </div>
@@ -435,7 +436,8 @@ export default {
       return this.hasGroups ? 'xl' : 'lg';
     },
     $c_nativeFields() {
-      return this.nativeFields.filter((b) => b.display);
+      return this.nativeFields;
+      // return this.nativeFields.filter((b) => b.display);
     },
     $c_visibilityColumns() {
       if (this.hasGroups) {

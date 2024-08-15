@@ -20,7 +20,8 @@ export default {
     name: 'SubuserColumnAccess',
     props: {
         switchPresetAccess: { type: Function, required: true },
-        selectedPreset: { type: Object, required: true }
+        selectedPreset: { type: Object, required: true },
+        presetEnabled: { type: Boolean, required: true },
     },
     data() {
         return {
@@ -34,10 +35,18 @@ export default {
             },
             deep: true,
         },
+        presetEnabled: {
+            handler(newValue) {
+                if (newValue) {
+                    this.switchValue = false;
+                }
+            },
+        },
     },
     methods: {
         async $_switchPresetAccess(value) {
-            await this.switchPresetAccess(value);
+            const mode = this.presetEnabled ? 'newPreset' : 'currentPreset';
+            await this.switchPresetAccess(value, mode);
         }
     }
 }
