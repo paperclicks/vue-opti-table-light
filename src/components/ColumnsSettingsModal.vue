@@ -337,8 +337,19 @@
           <b-form-checkbox :disabled="$c_isSuggestedPreset" v-model="presetEnabled" @change="$_addDefaultPresetName" />
           <p>Save as a column preset</p>
         </span>
-        <b-form-input v-show="!liveEdit && presetEnabled" @blur="$_inputBlur" class="input-preset-name" autofocus v-if="presetEnabled" placeholder="Column preset name" v-model="newPresetName" size="xl" />
+        <b-form-input 
+          v-if="presetEnabled" 
+          v-model="newPresetName" 
+          v-show="!liveEdit && presetEnabled" 
+          @blur="$_inputBlur" 
+          :class="presetNameAlreadyExits ? 'validate-name-input' : 'input-preset-name'" 
+          autofocus
+          @change="presetNameAlreadyExits = false"
+          placeholder="Column preset name" 
+          size="xl" 
+        />
         <a @click="$_disableLiveEdit" v-show="liveEdit && presetEnabled">{{ newPresetName }}</a>
+        <i v-if="presetNameAlreadyExits" v-b-tooltip.hover title="Preset name already exists" style="color: #dc3749" class="fa fa-exclamation-circle" aria-hidden="true"></i>
       </div>
       <div>
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
@@ -385,6 +396,7 @@ export default {
     editPreset: { type: Function, default: () => {} },
     showSubUserSettings: { type: Boolean, default: false },
     switchPresetAccess: { type: Function, default: () => {} },
+    presetList: { type: Object, default: () => ({})},
   },
   data() {
     return {
@@ -409,6 +421,7 @@ export default {
       editedPresetName: this.selectedPreset?.name || '',
       liveEdit: false,
       validateNameBeforeClose: true,
+      presetNameAlreadyExits: false,
     };
   },
   computed: {
@@ -436,8 +449,7 @@ export default {
       return this.hasGroups ? 'xl' : 'lg';
     },
     $c_nativeFields() {
-      return this.nativeFields;
-      // return this.nativeFields.filter((b) => b.display);
+      return this.nativeFields.filter((b) => b.display);
     },
     $c_visibilityColumns() {
       if (this.hasGroups) {
@@ -606,6 +618,11 @@ export default {
       const preset = {
         name: this.newPresetName,
       };
+      const presetNameExists = this.presetList.user_presets.find((preset) => preset.name === this.newPresetName);
+      if (presetNameExists) {
+        this.presetNameAlreadyExits = true;
+        return;
+      }
       this.$emit('save-preset', this.model, preset);
       this.$emit('input', this.model);
       this.presetEnabled = false;
@@ -722,9 +739,6 @@ export default {
         display: flex;
         align-items: center;
         gap: .3rem;
-        .validate-name-input {
-          border-color: #dc3749;
-        }
         .name-input {
           border-color: #ced4da;
         }
@@ -1045,6 +1059,9 @@ export default {
       }
     }
   }
+}
+.validate-name-input {
+  border-color: #dc3749;
 }
 .clean-btn {
   background-color: transparent;

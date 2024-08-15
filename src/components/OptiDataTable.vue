@@ -320,6 +320,7 @@
       :switchPresetAccess="switchPresetAccess"
       :selectedPreset="selectedPreset"
       :editPreset="editPreset"
+      :presetList="presetList"
     />
   </div>
 </template>
