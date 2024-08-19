@@ -48,51 +48,51 @@
                         :value="preset.name"
                         @change="() => $_changePreset(preset)"
                     >
-                    <span class="d-flex align-items-center justify-content-between">
-                      <p :id="`user-fields-${i}`" class="preset-name">
+                    <span :id="`user-fields-${i}`" class="d-flex align-items-center justify-content-between">
+                      <p class="preset-name">
                           {{ sliceText(preset.name, 25) }}
                       </p>
                       <svg v-if="preset.isPublic" class="info-icon ml-2" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20">
                         <path fill="#BBBBBD" d="M9 0a9 9 0 1 0 0 18A9 9 0 0 0 9 0ZM1.11 9.68h2.51c.04.91.167 1.814.38 2.7H1.84a7.86 7.86 0 0 1-.73-2.7Zm8.57-5.4V1.19a4.13 4.13 0 0 1 2.22 2c.205.347.386.708.54 1.08l-2.76.01Zm3.22 1.35c.232.883.37 1.788.41 2.7H9.68v-2.7h3.22ZM8.32 1.19v3.09H5.56A8.53 8.53 0 0 1 6.1 3.2a4.13 4.13 0 0 1 2.22-2.01Zm0 4.44v2.7H4.7c.04-.912.178-1.817.41-2.7h3.21Zm-4.7 2.69H1.11a7.86 7.86 0 0 1 .73-2.7H4a14.13 14.13 0 0 0-.38 2.7ZM4.7 9.68h3.62v2.7H5.11a12.88 12.88 0 0 1-.41-2.7Zm3.63 4v3.09a4.13 4.13 0 0 1-2.22-2a8.53 8.53 0 0 1-.54-1.08l2.76-.01Zm1.35 3.09v-3.04h2.76a8.53 8.53 0 0 1-.54 1.08a4.13 4.13 0 0 1-2.22 2v-.04Zm0-4.44v-2.7h3.62a12.88 12.88 0 0 1-.41 2.7H9.68Zm4.71-2.7h2.51a7.86 7.86 0 0 1-.73 2.7H14c.21-.87.337-1.757.38-2.65l.01-.05Zm0-1.35A14.13 14.13 0 0 0 14 5.63h2.16c.403.85.65 1.764.73 2.7l-2.5-.05Zm1-4H13.6a8.92 8.92 0 0 0-1.39-2.52a8 8 0 0 1 3.14 2.52h.04Zm-9.6-2.52A8.92 8.92 0 0 0 4.4 4.28H2.65a8 8 0 0 1 3.14-2.52Zm-3.15 12H4.4a8.92 8.92 0 0 0 1.39 2.52a8 8 0 0 1-3.14-2.55l-.01.03Zm9.56 2.52a8.92 8.92 0 0 0 1.39-2.52h1.76a8 8 0 0 1-3.14 2.48l-.01.04Z"/>
                       </svg>
                     </span>
-                        <button :disabled="$c_atLeastOneUserPreset" class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                                <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
+                    <button :disabled="$c_atLeastOneUserPreset" class="delete-preset-btn" @click.prevent v-b-modal="`modal-${i}`">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="none" stroke="#ABABAB" stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.286 8.571L7.429 20h9.142l1.143-11.429M13.5 15.5v-5m-3 5v-5M4.571 6.286h4.572m0 0l.382-1.529a1 1 0 0 1 .97-.757h3.01a1 1 0 0 1 .97.757l.382 1.529m-5.714 0h5.714m0 0h4.572" />
+                        </svg>
+                    </button>
+                    <b-modal hide-footer hide-header content-class="delete-preset-content"
+                        modal-class="optimizer-modal" :id="`modal-${i}`" :ref="`modal-${i}`" centered
+                        no-close-on-backdrop>
+                        <div class="delete-preset-header">
+                          <h5>Delete this column preset?</h5>
+                          <button @click="() => $_closeModal(`modal-${i}`)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 304 384">
+                              <path fill="currentColor" d="M299 73L179 192l120 119l-30 30l-120-119L30 341L0 311l119-119L0 73l30-30l119 119L269 43z"/>
                             </svg>
-                        </button>
-                        <b-modal hide-footer hide-header content-class="delete-preset-content"
-                            modal-class="optimizer-modal" :id="`modal-${i}`" :ref="`modal-${i}`" centered
-                            no-close-on-backdrop>
-                            <div class="delete-preset-header">
-                              <h5>Delete this column preset?</h5>
-                              <button @click="() => $_closeModal(`modal-${i}`)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 304 384">
-                                  <path fill="currentColor" d="M299 73L179 192l120 119l-30 30l-120-119L30 341L0 311l119-119L0 73l30-30l119 119L269 43z"/>
-                                </svg>
-                              </button>
-                            </div>
-                            <p>This column preset and its custom selections will be deleted on all entity levels if you continue.</p>
-                            <span>
-                              <button :disabled="presetLoader"
-                              @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
-                              <button @click="() => $_deletePreset(preset, `modal-${i}`)">
-                                {{ presetLoader ? 'Deleting' : 'Delete' }}
-                                <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
-                              </button>
-                            </span>
-                        </b-modal>
-                        <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`user-fields-${i}`" triggers="hover" placement="right">
-                          <template #title>{{ preset.name }}</template>
-                          <p>{{ preset.description }}</p>
-                          <ul>
-                            <li v-for="(field, i) in preset.fields.filter(f => f.display)" :key="i">
-                              {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
-                            </li>
-                          </ul>
-                        </b-popover>
-                    </b-form-radio>
+                          </button>
+                        </div>
+                        <p>This column preset and its custom selections will be deleted on all entity levels if you continue.</p>
+                        <span>
+                          <button :disabled="presetLoader"
+                          @click="() => $_closeModal(`modal-${i}`)">Cancel</button>
+                          <button @click="() => $_deletePreset(preset, `modal-${i}`)">
+                            {{ presetLoader ? 'Deleting' : 'Delete' }}
+                            <b-spinner small v-if="presetLoader" label="Spinning"></b-spinner>
+                          </button>
+                        </span>
+                    </b-modal>
+                    <b-popover custom-class="preset-info" boundary="window" :target="`user-fields-${i}`" triggers="hover" placement="left">
+                      <template #title>{{ preset.name }}</template>
+                      <p>{{ preset.description }}</p>
+                      <ul>
+                        <li v-for="(field, i) in preset.fields.filter(f => f.display)" :key="i">
+                          {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
+                        </li>
+                      </ul>
+                    </b-popover>
+                  </b-form-radio>
                 </b-dropdown-group>
               </div>
                 <button
@@ -150,7 +150,7 @@
                                 </defs>
                               </svg>
                         </span>
-                        <b-popover custom-class="preset-info" container="preset-list" boundary="window" :target="`description-${index}`" triggers="hover" placement="right">
+                        <b-popover custom-class="preset-info" boundary="window" :target="`description-${index}`" triggers="hover" placement="left">
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
                           <ul>
