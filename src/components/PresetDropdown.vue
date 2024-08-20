@@ -87,7 +87,7 @@
                       <template #title>{{ preset.name }}</template>
                       <p>{{ preset.description }}</p>
                       <ul>
-                        <li v-for="(field, i) in preset.fields.filter(f => f.display)" :key="i">
+                        <li v-for="(field, i) in $_filteredFields(preset.fields)" :key="i">
                           {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
                         </li>
                       </ul>
@@ -154,7 +154,7 @@
                           <template #title>{{ preset.name }}</template>
                           <p>{{ preset.description }}</p>
                           <ul>
-                            <li v-for="(field, i) in preset.fields" :key="i">
+                            <li v-for="(field, i) in $_filteredFields(preset.fields)" :key="i">
                                 {{ typeof field.header.content === 'function' ? field.header.content() : field.header.content }}
                             </li>
                           </ul>
@@ -312,7 +312,10 @@ export default {
         },
         createNewPreset() {
           this.createPreset(this.localSelectedPreset);
-        }
+        },
+        $_filteredFields(fields) {
+            return fields?.filter(f => f.display);
+        },
     }
 }
 </script>
