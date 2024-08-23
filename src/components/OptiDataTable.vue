@@ -321,6 +321,7 @@
       :selectedPreset="selectedPreset"
       :editPreset="editPreset"
       :presetList="presetList"
+      :saveSettingsLoading="saveSettingsLoading"
     />
   </div>
 </template>

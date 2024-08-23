@@ -353,11 +353,11 @@
       </div>
       <div>
         <button class="btn btn-secondary mr-2" @click="hide">Cancel</button>
-        <button v-if="!presetEnabled" class="btn btn-primary" @click="$_saveSettings">
-          Save
+        <button v-if="!presetEnabled" class="btn btn-primary" :disabled="saveSettingsLoading" @click="$_saveSettings">
+          Save <b-spinner v-show="saveSettingsLoading" small label="Spinning"></b-spinner>
         </button>
         <button v-else class="btn btn-primary" @click="$_savePreset" :disabled="$c_disableSaveButton">
-          Save as preset
+          Save as preset  <b-spinner v-show="saveSettingsLoading" small label="Spinning"></b-spinner>
         </button>
       </div>
     </template>
@@ -397,6 +397,7 @@ export default {
     showSubUserSettings: { type: Boolean, default: false },
     switchPresetAccess: { type: Function, default: () => {} },
     presetList: { type: Object, default: () => ({})},
+    saveSettingsLoading: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -476,7 +477,7 @@ export default {
       return this.selectedColumnType === 'compare';
     },
     $c_disableSaveButton() {
-      return this.presetEnabled && this.newPresetName?.length === 0;
+      return (this.presetEnabled && this.newPresetName?.length === 0) || this.saveSettingsLoading;
     },
     $c_noResult() {
       return this.$c_columns?.length === 0;
@@ -536,9 +537,11 @@ export default {
         return groupedVisibilityColumns;
     },
     $_saveSettings() {
+      this.processingSave = true;
       this.$emit('save', this.model);
       this.$emit('input', this.model);
       this.presetEnabled = false;
+      this.processingSave = false;
       this.hide();
     },
     $_loadFromModel() {
