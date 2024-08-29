@@ -1,5 +1,6 @@
 export default {
   name: { type: String, required: true },
+  tableId: { type: String, required: false },
   selectable: { type: Boolean, default: false },
   sticky: { type: Boolean, default: false },
   hover: { type: Boolean, default: false },

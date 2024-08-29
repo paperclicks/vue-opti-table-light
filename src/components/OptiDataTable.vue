@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[{ 'datatable-wrapper-empty': $c_items.length === 0 }, `datatable-wrapper-${sticky ? 'sticky' : 'no-sticky'} datatable-wrapper`]">
+      :class="[{ 'datatable-wrapper-empty': $c_items.length === 0 }, `datatable-wrapper-${sticky ? 'sticky' : 'no-sticky'} datatable-wrapper`]">
     <!--TOP SLOT-->
     <div class="row" v-if="$slots['top']">
       <slot name="top"></slot>
@@ -16,26 +16,26 @@
 
         <b-input-group>
           <b-form-input v-model="models.search" placeholder="Search..." @focus.native="$event.target.select()"
-            @keydown.enter.native="$_submitSearchOnEnter" @input="$_submitSearch" class="datatable-search-field">
+                        @keydown.enter.native="$_submitSearchOnEnter" @input="$_submitSearch" class="datatable-search-field">
           </b-form-input>
           <template v-slot:append v-if="enableColumns && saveSettings">
             <div v-if="!hasPresets">
               <b-btn v-show="saveSettingsLoading"><i class="fa fa-spinner fa-spin" aria-hidden="true"
-                  title="Saving..."></i></b-btn>
+                                                     title="Saving..."></i></b-btn>
               <b-btn v-show="!saveSettingsLoading && !hasPresets" @click="$refs.columnsSettingsModal.show()"><i
                   class="fa fa-columns" aria-hidden="true"></i></b-btn>
             </div>
             <preset-dropdown
-              v-else
-              :sliceText="$_sliceText"
-              :presetList="presetList"
-              :saveSettingsLoading="saveSettingsLoading"
-              :openColumnSettings="$_openColumnSettings"
-              :createPreset="$_createPreset"
-              :selectedPreset="selectedPreset"
-              :deletePreset="deletePreset"
-              :savePreset="savePreset"
-              :changePreset="changePreset"
+                v-else
+                :sliceText="$_sliceText"
+                :presetList="presetList"
+                :saveSettingsLoading="saveSettingsLoading"
+                :openColumnSettings="$_openColumnSettings"
+                :createPreset="$_createPreset"
+                :selectedPreset="selectedPreset"
+                :deletePreset="deletePreset"
+                :savePreset="savePreset"
+                :changePreset="changePreset"
             />
           </template>
         </b-input-group>
@@ -49,64 +49,64 @@
 
         <!-- SYNC FIXED COLUMNS -->
         <col-group-table :selectable="selectable" :resized-columns="localResizedColumns"
-          :headerFields="$c_headerFields" />
+                         :headerFields="$c_headerFields" />
 
         <!-- ALL CHECKBOX & TABLE HEADERS-->
         <thead>
-          <tr class="column-header">
-            <th class="column-checkbox" v-if="selectable">
-              <input type="checkbox" :true-value="true" :false-value="false" :value="models.selectAllCheckbox"
-                v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
-            </th>
-            <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
-              <div class="header">
-                <div v-if="col.item.sortable" class="sort" @click="$_fieldClickAction(col)">
-                  <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}" class="arrow-up">
-                  </div>
-                  <div style="height: 5px;"></div>
-                  <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
-                    class="arrow-down"></div>
+        <tr class="column-header">
+          <th class="column-checkbox" v-if="selectable">
+            <input type="checkbox" :true-value="true" :false-value="false" :value="models.selectAllCheckbox"
+                   v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
+          </th>
+          <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
+            <div class="header">
+              <div v-if="col.item.sortable" class="sort" @click="$_fieldClickAction(col)">
+                <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}" class="arrow-up">
                 </div>
-                <div :id="`info-popover-${i}`" @click="col.header.preventSort ? null : $_fieldClickAction(col)"
-                  class="title" :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }"
-                  style="text-align: center;">
-                  <!-- CHECK IF IS A SLOT -->
-                  <i v-if="col.header.info && showTooltipBeforeText && !$c_headerPopover"
-                    v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
-                    class="fa fa-info-circle info-icon"></i>
-                  <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
-                    <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
-                  </div>
-                  <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'"
-                    v-html="col.header.content()"></span>
-                  <span :id="`column-${i}`" class="column" v-else-if="(typeof col.header.content != 'function')"
-                    v-html="col.header.content"></span>
-                  <i v-if="col.header.info && !showTooltipBeforeText && !$c_headerPopover"
-                    v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window', customClass: col.header.customClass }"
-                    class="fa fa-info-circle info-icon"></i>
-                </div>
-                <!--DROPDOWN FILTERS-->
+                <div style="height: 5px;"></div>
+                <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
+                     class="arrow-down"></div>
               </div>
-              <div @click="$_checkColumnWidth(`column-${i}`)" @mousedown="$_handleMouseDown($event, col, `col-${i}`)"
-                class="column-resize"></div>
-              <b-popover v-if="$c_headerPopover && col.header.info" :target="`info-popover-${i}`" triggers="hover"
-                placement="left" custom-class="header-popover">
-                <div class="info-popover">
-                  <h5>{{ col.header.content }}</h5>
-                  <p v-html="col.header.info"></p>
+              <div :id="targetIdValue(tableId, i)" @click="col.header.preventSort ? null : $_fieldClickAction(col)"
+                   class="title" :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }"
+                   style="text-align: center;">
+                <!-- CHECK IF IS A SLOT -->
+                <i v-if="col.header.info && showTooltipBeforeText && !$c_headerPopover"
+                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
+                   class="fa fa-info-circle info-icon"></i>
+                <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
+                  <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
                 </div>
-              </b-popover>
-            </th>
-          </tr>
-          <tr v-if="columnFilterEnable" class="column-filter">
-            <th class="column-checkbox" v-if="selectable"></th>
-            <th v-for="(col, i) in $c_headerFields" :key="i" :class="col.colClass">
-              <template v-if="filterFieldsModels[col.item.key]">
-                <filter-input v-model="filterFieldsModels[col.item.key]"
-                  @input="(payload) => $_onChangeColumnFilter(col.item.key, payload)" />
-              </template>
-            </th>
-          </tr>
+                <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'"
+                      v-html="col.header.content()"></span>
+                <span :id="`column-${i}`" class="column" v-else-if="(typeof col.header.content != 'function')"
+                      v-html="col.header.content"></span>
+                <i v-if="col.header.info && !showTooltipBeforeText && !$c_headerPopover"
+                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window', customClass: col.header.customClass }"
+                   class="fa fa-info-circle info-icon"></i>
+              </div>
+              <!--DROPDOWN FILTERS-->
+            </div>
+            <div @click="$_checkColumnWidth(`column-${i}`)" @mousedown="$_handleMouseDown($event, col, `col-${i}`)"
+                 class="column-resize"></div>
+            <b-popover v-if="$c_headerPopover && col.header.info" :target="targetIdValue(tableId, i)" triggers="hover"
+                       placement="left" custom-class="header-popover">
+              <div class="info-popover">
+                <h5>{{ col.header.content }}</h5>
+                <p v-html="col.header.info"></p>
+              </div>
+            </b-popover>
+          </th>
+        </tr>
+        <tr v-if="columnFilterEnable" class="column-filter">
+          <th class="column-checkbox" v-if="selectable"></th>
+          <th v-for="(col, i) in $c_headerFields" :key="i" :class="col.colClass">
+            <template v-if="filterFieldsModels[col.item.key]">
+              <filter-input v-model="filterFieldsModels[col.item.key]"
+                            @input="(payload) => $_onChangeColumnFilter(col.item.key, payload)" />
+            </template>
+          </th>
+        </tr>
         </thead>
       </table>
       <div v-else style="height: 1px"></div>
@@ -115,77 +115,79 @@
       <table ref="table" :class="[{'table-hover': hover}, 'table table-striped table-sm mb-0']">
         <!-- SYNC FIXED COLUMNS -->
         <col-group-table v-if="sticky" :resized-columns="localResizedColumns" :selectable="selectable"
-          :headerFields="$c_headerFields" />
+                         :headerFields="$c_headerFields" />
 
         <!--ALL CHECKBOX & TABLE HEADERS-->
         <thead v-else>
-          <tr class="column-header">
-            <th class="column-checkbox" v-if="selectable">
-              <input type="checkbox" :true-value="true" :false-value="false" :value="models.selectAllCheckbox"
-                v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
-            </th>
-            <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
-              <div class="header" :id="`info-popover-${i}`">
-                <div v-if="col.item.sortable" class="sort p-2" @click="$_fieldClickAction(col)">
-                  <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}" class="arrow-up">
-                  </div>
-                  <div style="height: 5px;"></div>
-                  <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
-                    class="arrow-down"></div>
+        <tr class="column-header">
+          <th class="column-checkbox" v-if="selectable">
+            <input type="checkbox" :true-value="true" :false-value="false" :value="models.selectAllCheckbox"
+                   v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
+          </th>
+          <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
+            <div class="header" :id="targetIdValue(tableId, i)">
+              <div v-if="col.item.sortable" class="sort p-2" @click="$_fieldClickAction(col)">
+                <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}" class="arrow-up">
                 </div>
-                <div @click="col.header.preventSort ? null : $_fieldClickAction(col)" class="title pt-2 pb-2"
-                  :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }" style="text-align: center;">
-                  <!-- CHECK IF IS A SLOT -->
-                  <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
-                    <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
-                  </div>
-                  <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'"
-                    v-html="col.header.content()"></span>
-                  <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content != 'function'"
-                    v-html="col.header.content"></span>
-                  <i v-if="col.header.info && !$c_headerPopover"
-                    v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
-                    class="fa fa-info-circle info-icon"></i>
-                </div>
-                <b-popover v-if="$c_headerPopover" :target="`info-popover-${i}`" triggers="hover" placement="right">
-                  <template #title>{{ col.header.content }}</template>
-                  <p v-html="col.header.info"></p>
-                </b-popover>
-                <!--DROPDOWN FILTERS-->
+                <div style="height: 5px;"></div>
+                <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
+                     class="arrow-down"></div>
               </div>
-            </th>
-          </tr>
-          <tr v-if="columnFilterEnable" class="column-filter">
-            <th v-if="selectable"></th>
-            <th v-for="(col, i) in $c_headerFields" :key="i">
-              <template v-if="filterFieldsModels[col.item.key]">
-                <filter-input v-model="filterFieldsModels[col.item.key]"
-                  @input="(payload) => $_onChangeColumnFilter(col.item.key, payload)" />
-              </template>
-            </th>
-          </tr>
+              <div @click="col.header.preventSort ? null : $_fieldClickAction(col)" class="title pt-2 pb-2"
+                   :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }" style="text-align: center;">
+                <!-- CHECK IF IS A SLOT -->
+                <div v-if="col.header.slot" :class="[col.header.class, 'HEADER_field']">
+                  <slot :name="`HEADER_${col.header.slot}`" :item="col.header" :i="i"></slot>
+                </div>
+                <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content == 'function'"
+                      v-html="col.header.content()"></span>
+                <span :id="`column-${i}`" class="column" v-else-if="typeof col.header.content != 'function'"
+                      v-html="col.header.content"></span>
+                <i v-if="col.header.info && !$c_headerPopover"
+                   v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
+                   class="fa fa-info-circle info-icon"></i>
+              </div>
+              <b-popover v-if="$c_headerPopover && col.header.info" :target="targetIdValue(tableId, i)" triggers="hover" placement="left" custom-class="header-popover">
+                <div class="info-popover">
+                  <h5>{{ col.header.content }}</h5>
+                  <p v-html="col.header.info"></p>
+                </div>
+              </b-popover>
+              <!--DROPDOWN FILTERS-->
+            </div>
+          </th>
+        </tr>
+        <tr v-if="columnFilterEnable" class="column-filter">
+          <th v-if="selectable"></th>
+          <th v-for="(col, i) in $c_headerFields" :key="i">
+            <template v-if="filterFieldsModels[col.item.key]">
+              <filter-input v-model="filterFieldsModels[col.item.key]"
+                            @input="(payload) => $_onChangeColumnFilter(col.item.key, payload)" />
+            </template>
+          </th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, i) in $c_itemsCurrentPage" :key="$_rowKey(item) || i"
+        <tr v-for="(item, i) in $c_itemsCurrentPage" :key="$_rowKey(item) || i"
             :class="{'rowSelected': item.$selected && focusSelectedRows}">
-            <td v-if="selectable" class="column-checkbox">
-              <input type="checkbox" :true-value="true" :false-value="false" :value="item.$selected"
-                v-model="item.$selected" @change="$_selectItem(item)" />
-            </td>
-            <template v-for="(col, j) in $c_headerFields">
-              <td :key="j" :class="[col.item.cellClass, col.colClass]" v-if="col.display" :style="col.item.style || ''"
+          <td v-if="selectable" class="column-checkbox">
+            <input type="checkbox" :true-value="true" :false-value="false" :value="item.$selected"
+                   v-model="item.$selected" @change="$_selectItem(item)" />
+          </td>
+          <template v-for="(col, j) in $c_headerFields">
+            <td :key="j" :class="[col.item.cellClass, col.colClass]" v-if="col.display" :style="col.item.style || ''"
                 @click="col.item.onClick && col.item.onClick(item, i)">
-                <!-- CHECK IF FIELD IS A SLOT -->
-                <div v-if="col.item.slot" :class="[col.item.class, 'field']">
-                  <slot :name="col.item.slot" :item="item.$ref" :field="col" :i="i"></slot>
-                </div>
-                <!-- OTHERWISE RENDER FIELD  -->
-                <div v-else :class="[col.item.class, 'field']"
-                  v-html="col.item.content ? col.item.content(item) : item[col.item.key]">
-                </div>
-              </td>
-            </template>
-          </tr>
+              <!-- CHECK IF FIELD IS A SLOT -->
+              <div v-if="col.item.slot" :class="[col.item.class, 'field']">
+                <slot :name="col.item.slot" :item="item.$ref" :field="col" :i="i"></slot>
+              </div>
+              <!-- OTHERWISE RENDER FIELD  -->
+              <div v-else :class="[col.item.class, 'field']"
+                   v-html="col.item.content ? col.item.content(item) : item[col.item.key]">
+              </div>
+            </td>
+          </template>
+        </tr>
         </tbody>
         <template v-if="!sticky">
           <!--TABLE FOOTER, TOTALS-->
@@ -300,20 +302,20 @@
     <div class="row" v-if="$slots['bottom']">
       <slot name="bottom"></slot>
     </div>
-    <columns-settings-modal 
-      ref="columnsSettingsModal" 
-      v-model="localHeaderFields" 
+    <columns-settings-modal
+      ref="columnsSettingsModal"
+      v-model="localHeaderFields"
       @save="$_saveSettings"
       @save-preset="$_savePreset"
-      :update-custom-metric="updateCustomMetric" 
+      :update-custom-metric="updateCustomMetric"
       :custom-metric-options="customMetricOptions"
-      :metric-group-options="metricGroupOptions" 
-      :has-groups="hasGroups" 
+      :metric-group-options="metricGroupOptions"
+      :has-groups="hasGroups"
       :has-comparison-columns="hasComparisonColumns"
-      :has-custom-metrics="hasCustomMetrics" 
+      :has-custom-metrics="hasCustomMetrics"
       :nativeFields="nativeFields"
-      :updateComparisonColumns="updateComparisonColumns" 
-      :savePreset="savePreset" 
+      :updateComparisonColumns="updateComparisonColumns"
+      :savePreset="savePreset"
       :hasPresets="hasPresets"
       :infoType="infoType"
       :showSubUserSettings="showSubUserSettings"
@@ -372,7 +374,7 @@ export default {
     // this.$watch('dataModel', () => { // Log Data Model Changes
     //   console.log('%cChange DataModel', 'color: #fd7e14;');
     // });
-    
+
     // If Client Side Render
     if (!this.serverSidePagination) {
       // Apply Order & Search Filter
@@ -535,7 +537,7 @@ export default {
       overflow-x: auto;
     }
   }
-  
+
   .table-holder {
     // overflow-x: hidden;
     overflow-x: auto;
@@ -636,7 +638,7 @@ export default {
         }
       }
     }
-    
+
     tbody {
       tr > td {
         vertical-align: middle;
@@ -712,7 +714,7 @@ export default {
         border: 1px solid #e1e6ef;
         display: flex;
         align-items: center;
-        gap: 1.2rem;  
+        gap: 1.2rem;
         .toggle-text {
           margin: 0 0 0 0.3rem;
           padding: 0;

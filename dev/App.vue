@@ -24,6 +24,7 @@
       :nativeFields="nativeFields"
       :hasPresets="true"
       :presetList="presetList"
+      :show-header-popover="true"
       :selectedPreset="selectedPreset"
       :totals="table.totals"
       :exportCsvItems="$_csvFetchData"
@@ -35,11 +36,11 @@
       :update-custom-metric="$_updateCustomMetric"
       :custom-metric-options="$options.metricOptions">
       <template  #export="{csvDownloadLoading, downloadCsv, xlsDownloadLoading, downloadXls}">
-        <b-btn @click="downloadCsv"> 
+        <b-btn @click="downloadCsv">
           <span v-if="csvDownloadLoading">Downloading<i class="fa fa-spinner fa-spin" aria-hidden="true"></i></span>
           <span v-else>Download CSV</span>
         </b-btn>
-        <b-btn @click="downloadXls"> 
+        <b-btn @click="downloadXls">
           <span v-if="xlsDownloadLoading">Downloading<i class="fa fa-spinner fa-spin" aria-hidden="true"></i></span>
           <span v-else>Download XLS</span>
         </b-btn>
