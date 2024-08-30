@@ -32,6 +32,7 @@
       :changePreset="$_changePreset"
       :column-filter-reset="false"
       :sticky="sticky"
+      :show-header-popover="true"
       :update-custom-metric="$_updateCustomMetric"
       :custom-metric-options="$options.metricOptions">
       <template  #export="{csvDownloadLoading, downloadCsv, xlsDownloadLoading, downloadXls}">

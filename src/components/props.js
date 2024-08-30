@@ -2,6 +2,7 @@ export default {
   name: { type: String, required: true },
   selectable: { type: Boolean, default: false },
   sticky: { type: Boolean, default: false },
+  tableId: { type: String, required: false },
   hover: { type: Boolean, default: false },
   headerFields: { type: Array, required: true },
   items: { type: Array, required: true },
