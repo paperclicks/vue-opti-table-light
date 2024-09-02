@@ -67,7 +67,7 @@
                   <div :class="{'arrow-down-active': sortKey === col.item.key && sortOrder === 'desc'}"
                     class="arrow-down"></div>
                 </div>
-                <div :id="`info-popover-${i}`" @click="col.header.preventSort ? null : $_fieldClickAction(col)"
+                <div :id="targetIdValue(tableId, i)" @click="col.header.preventSort ? null : $_fieldClickAction(col)"
                   class="title" :class="{ 'pl-2': !col.item.sortable, 'pr-2': !col.item.filter }"
                   style="text-align: center;">
                   <!-- CHECK IF IS A SLOT -->
@@ -125,7 +125,7 @@
                 v-model="models.selectAllCheckbox" @change="$_selectAllItemsAction()" />
             </th>
             <th v-for="(col, i) in $c_headerFields" :key="i" :style="col.header.style || ''" :class="col.colClass">
-              <div class="header" :id="`info-popover-${i}`">
+              <div class="header" :id="targetIdValue(tableId, i)">
                 <div v-if="col.item.sortable" class="sort p-2" @click="$_fieldClickAction(col)">
                   <div :class="{'arrow-up-active': sortKey === col.item.key && sortOrder === 'asc'}" class="arrow-up">
                   </div>
@@ -147,9 +147,11 @@
                     v-b-tooltip="{ hover: true, html: true, title: col.header.info, boundary: 'window' }"
                     class="fa fa-info-circle info-icon"></i>
                 </div>
-                <b-popover v-if="$c_headerPopover" :target="`info-popover-${i}`" triggers="hover" placement="right">
-                  <template #title>{{ col.header.content }}</template>
+                <b-popover v-if="$c_headerPopover && col.header.info" :target="targetIdValue(tableId, i)" triggers="hover" placement="left" custom-class="header-popover">
+                  <div class="info-popover">
+                  <h5>{{ col.header.content }}</h5>
                   <p v-html="col.header.info"></p>
+                </div>
                 </b-popover>
                 <!--DROPDOWN FILTERS-->
               </div>

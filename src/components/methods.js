@@ -245,7 +245,12 @@ export default {
         field.customMetric = item.customMetric;
       return field;
     });
-  }
-
+  },
+  targetIdValue(tableId, i) {
+    if (tableId){
+      return `popover-${tableId}-${i}`
+    }
+    return `info-popover-${i}`
+  },
 };
 
