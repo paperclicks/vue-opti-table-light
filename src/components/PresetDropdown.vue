@@ -22,7 +22,7 @@
                 <i v-show="saveSettingsLoading" class="fa fa-spinner fa-spin" aria-hidden="true"
                 title="Saving..."></i>
                 <p class="toggle-text">
-                    Columns
+                    {{ localSelectedPreset.length > 7 ? sliceText(localSelectedPreset, 7) : localSelectedPreset }}
                 </p>
               </span>
               <b-popover custom-class="preset-name" boundary="window" target="popover-preset-name" triggers="hover" placement="top">
