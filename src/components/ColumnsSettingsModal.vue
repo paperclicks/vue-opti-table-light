@@ -251,7 +251,7 @@
               :partialItemsOfGroupChecked="$_partialItemsOfGroupChecked"
               :selectAllItemsOfGroup="$_selectAllItemsOfGroup" :editCustomMetric="$_editCustomMetric"
               :resetCustomMetricLoading="resetCustomMetricLoading" :updateCustomMetric="$_updateCustomMetric"
-              :infoType="infoType" :isColTemporary="$_isColTemporary" />
+              :infoType="infoType" :isColTemporary="$_isColTemporary" :removeCustomMetricActions="removeCustomMetricActions" />
           </b-list-group-item>
         </b-list-group>
       </div>
@@ -386,8 +386,8 @@ export default {
     customMetricOptions: { type: Array, default: () => [] },
     metricGroupOptions: { type: Array, default: () => [] },
     hasGroups: { type: Boolean, default: false },
+    removeCustomMetricActions: { type: Boolean, default: false },
     hasComparisonColumns: { type: Boolean, default: false },
-    hasCustomMetrics: { type: Boolean, default: false },
     nativeFields: { type: Array, default: () => [] },
     selectedPreset: { type: Object, default: () => {} },
     savePreset: { type: Function, default: () => {} },

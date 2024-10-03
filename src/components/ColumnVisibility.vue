@@ -25,7 +25,7 @@
       </p>
       </b-form-checkbox>
       <custom-metric-popover
-        v-if="(typeof item.customMetric !== 'undefined')"
+        v-if="(typeof item.customMetric !== 'undefined') && !removeCustomMetricActions"
         :col="item"
         :resetCustomMetricLoading="resetCustomMetricLoading"
         :updateCustomMetric="updateCustomMetric"
@@ -52,7 +52,7 @@
       </p>
       </b-form-checkbox>
       <custom-metric-popover
-        v-if="(typeof col.customMetric !== 'undefined')"
+        v-if="(typeof col.customMetric !== 'undefined') && !removeCustomMetricActions"
         :col="col"
         :resetCustomMetricLoading="resetCustomMetricLoading"
         :updateCustomMetric="updateCustomMetric"
@@ -76,6 +76,7 @@ export default {
   name: 'ColumnVisibility',
   props: {
     hasGroups: { type: Boolean, default: false },
+    removeCustomMetricActions: { type: Boolean, default: false },
     allItemsOfGroupChecked: { type: Function, default: () => { } },
     partialItemsOfGroupChecked: { type: Function, default: () => { } },
     selectAllItemsOfGroup: { type: Function, default: () => { } },
