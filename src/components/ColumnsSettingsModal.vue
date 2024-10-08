@@ -523,6 +523,7 @@ export default {
         return;
       }
       this.validateNameBeforeClose = true;
+      this.presetNameAlreadyExits = false;
       this.modal = false;
     },
     groupVisibilityColumns() {
